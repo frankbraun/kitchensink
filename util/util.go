@@ -6,8 +6,11 @@
 package util
 
 import (
+	crand "crypto/rand"
 	"flag"
 	"fmt"
+	"io"
+	"math/big"
 	"os"
 )
 
@@ -23,4 +26,13 @@ func Usage(synopsis string) {
 	fmt.Fprintf(os.Stderr, "Usage: %s %s\n", os.Args[0], synopsis)
 	flag.PrintDefaults()
 	os.Exit(1)
+}
+
+// Rand returns a uniform random value in [0, max). It panics if max <= 0.
+func Rand(rand io.Reader, max int64) (int64, error) {
+	n, err := crand.Int(rand, big.NewInt(max))
+	if err != nil {
+		return 0, err
+	}
+	return n.Int64(), nil
 }
