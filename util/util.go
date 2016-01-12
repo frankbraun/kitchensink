@@ -11,6 +11,12 @@ import (
 	"os"
 )
 
+// Fatal prints err to stderr and exits the process with exit code 1.
+func Fatal(err error) {
+	fmt.Fprintf(os.Stderr, "%s: error: %s\n", os.Args[0], err)
+	os.Exit(1)
+}
+
 // Usage prints the usage of the running command with synopsis and the defined
 // options from the flag package to stderr and exits with error code 1.
 func Usage(synopsis string) {
