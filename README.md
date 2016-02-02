@@ -1,3 +1,3 @@
-## Kitchensink — miscellaneous Go code [![GoDoc](https://godoc.org/github.com/frankbraun/kitchensink?status.png)](http://godoc.org/github.com/frankbraun/kitchensink) [![Build Status](https://travis-ci.org/frankbraun/kitchensink.png)](https://travis-ci.org/frankbraun/kitchensink)
+## Kitchensink — miscellaneous Go code [![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](http://godoc.org/github.com/frankbraun/kitchensink) [![Build Status](http://img.shields.io/travis/frankbraun/kitchensink.svg?style=flat-square)](https://travis-ci.org/frankbraun/kitchensink)
 
-This repository contains miscellaneous Go code I use in small projects.
+This repository contains miscellaneous Go code.
