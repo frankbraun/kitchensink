@@ -62,7 +62,14 @@ func getLBMAPrice(api string, dataIndex int) (float64, error) {
 		return 0, err
 	}
 	data := jsn["dataset"].(map[string]interface{})["data"].([]interface{})
-	price := data[0].([]interface{})[dataIndex].(float64)
+	var price float64
+	if data[0].([]interface{})[dataIndex] != nil {
+		// p.m. price is available
+		price = data[0].([]interface{})[dataIndex].(float64)
+	} else {
+		// p.m. price is not available, use a.m. price instead
+		price = data[0].([]interface{})[dataIndex-1].(float64)
+	}
 	return price, nil
 }
 
