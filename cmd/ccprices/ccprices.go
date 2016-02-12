@@ -16,6 +16,7 @@ import (
 )
 
 const (
+	euroAPI  = "http://api.fixer.io/latest"
 	xauAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?limit=1"
 	xagAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/SILVER.json?limit=1"
 	coinsAPI = "http://coinmarketcap.northpole.ro/api/v5/all.json"
@@ -30,6 +31,20 @@ var (
 type result struct {
 	symbol string
 	price  float64
+}
+
+func getEuroExchangeRates() (map[string]interface{}, error) {
+	resp, err := http.Get(euroAPI)
+	b, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+	jsn := make(map[string]interface{})
+	if err := json.Unmarshal(b, &jsn); err != nil {
+		return nil, err
+	}
+	return jsn["rates"].(map[string]interface{}), nil
 }
 
 func getLBMAPrice(api string, dataIndex int) (float64, error) {
@@ -74,6 +89,11 @@ func fatal(err error) {
 }
 
 func main() {
+	// get euro exchange rates
+	rates, err := getEuroExchangeRates()
+	if err != nil {
+		fatal(err)
+	}
 	// get gold price
 	xau, err := getLBMAPrice(xauAPI, 6)
 	if err != nil {
@@ -112,10 +132,13 @@ func main() {
 	}
 	// output all prices
 	t := time.Now().Format("2006/01/02 15:04:05")
-	fmt.Printf("P %s XAU %7.2f EUR\n", t, xau)
-	fmt.Printf("P %s XAG %7.2f EUR\n", t, xag)
+	fmt.Printf("P %s USD %11.6f EUR\n", t, 1/rates["USD"].(float64))
+	fmt.Printf("P %s GBP %11.6f EUR\n", t, 1/rates["GBP"].(float64))
+	fmt.Printf("P %s CZK %11.6f EUR\n", t, 1/rates["CZK"].(float64))
+	fmt.Printf("P %s XAU %11.6f EUR\n", t, xau)
+	fmt.Printf("P %s XAG %11.6f EUR\n", t, xag)
 	for _, name := range coins {
-		fmt.Printf("P %s %s %7.2f EUR\n", t, prices[name].symbol,
+		fmt.Printf("P %s %s %11.6f EUR\n", t, prices[name].symbol,
 			prices[name].price)
 	}
 }
