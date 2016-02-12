@@ -74,7 +74,7 @@ func getLBMAPrice(api string, dataIndex int) (float64, error) {
 }
 
 func getCoinPrices() ([]interface{}, error) {
-	resp, err := http.Get("http://coinmarketcap.northpole.ro/api/v5/all.json")
+	resp, err := http.Get(coinsAPI)
 	if err != nil {
 		return nil, err
 	}
