@@ -15,11 +15,40 @@ import (
 	"time"
 )
 
-var coins = []string{"Bitcoin", "Decred", "Namecoin"}
+const (
+	xauAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?limit=1"
+	xagAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/SILVER.json?limit=1"
+	coinsAPI = "http://coinmarketcap.northpole.ro/api/v5/all.json"
+)
+
+var (
+	// Quandl API key can be set via environment variable QUANDL_API_KEY
+	quandl = os.Getenv("QUANDL_API_KEY")
+	coins  = []string{"Bitcoin", "Decred", "Namecoin"}
+)
 
 type result struct {
 	symbol string
 	price  float64
+}
+
+func getLBMAPrice(api string, dataIndex int) (float64, error) {
+	if quandl != "" {
+		api += "?api_key=" + quandl
+	}
+	resp, err := http.Get(api)
+	b, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
+	if err != nil {
+		return 0, err
+	}
+	jsn := make(map[string]interface{})
+	if err := json.Unmarshal(b, &jsn); err != nil {
+		return 0, err
+	}
+	data := jsn["dataset"].(map[string]interface{})["data"].([]interface{})
+	price := data[0].([]interface{})[dataIndex].(float64)
+	return price, nil
 }
 
 func getCoinPrices() ([]interface{}, error) {
@@ -45,6 +74,16 @@ func fatal(err error) {
 }
 
 func main() {
+	// get gold price
+	xau, err := getLBMAPrice(xauAPI, 6)
+	if err != nil {
+		fatal(err)
+	}
+	// get silver price
+	xag, err := getLBMAPrice(xagAPI, 3)
+	if err != nil {
+		fatal(err)
+	}
 	// get all coin prices
 	all, err := getCoinPrices()
 	if err != nil {
@@ -71,8 +110,10 @@ func main() {
 			prices[name] = &result{symbol: coin["symbol"].(string), price: p}
 		}
 	}
-	// output coin prices
+	// output all prices
 	t := time.Now().Format("2006/01/02 15:04:05")
+	fmt.Printf("P %s XAU %7.2f EUR\n", t, xau)
+	fmt.Printf("P %s XAG %7.2f EUR\n", t, xag)
 	for _, name := range coins {
 		fmt.Printf("P %s %s %7.2f EUR\n", t, prices[name].symbol,
 			prices[name].price)
