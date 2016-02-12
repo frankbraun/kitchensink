@@ -15,40 +15,28 @@ import (
 	"time"
 )
 
-var coins = []string{"BTC", "DCR", "NMC"}
+var coins = []string{"Bitcoin", "Decred", "Namecoin"}
 
 type result struct {
 	symbol string
 	price  float64
-	err    error
 }
 
-func getCoinPrice(ch chan<- *result, sym string) {
-	resp, err := http.Get("http://coinmarketcap.northpole.ro/api/v5/" + sym + ".json")
+func getCoinPrices() ([]interface{}, error) {
+	resp, err := http.Get("http://coinmarketcap.northpole.ro/api/v5/all.json")
 	if err != nil {
-		ch <- &result{err: err}
-		return
+		return nil, err
 	}
 	b, err := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
-		ch <- &result{err: err}
-		return
+		return nil, err
 	}
 	jsn := make(map[string]interface{})
 	if err := json.Unmarshal(b, &jsn); err != nil {
-		ch <- &result{err: err}
-		return
+		return nil, err
 	}
-	s, _ := json.MarshalIndent(jsn, "", "  ")
-	fmt.Println(string(s))
-	f := jsn["price"].(map[string]interface{})["eur"].(string)
-	p, err := strconv.ParseFloat(f, 64)
-	if err != nil {
-		ch <- &result{err: err}
-		return
-	}
-	ch <- &result{symbol: sym, price: p}
+	return jsn["markets"].([]interface{}), nil
 }
 
 func fatal(err error) {
@@ -57,20 +45,36 @@ func fatal(err error) {
 }
 
 func main() {
-	ch := make(chan *result)
-	for _, sym := range coins {
-		go getCoinPrice(ch, sym)
+	// get all coin prices
+	all, err := getCoinPrices()
+	if err != nil {
+		fatal(err)
 	}
-	prices := make(map[string]float64)
-	for range coins {
-		r := <-ch
-		if r.err != nil {
-			fatal(r.err)
+	// construct map of coin names we are interested in
+	names := make(map[string]struct{})
+	for _, name := range coins {
+		names[name] = struct{}{}
+	}
+	prices := make(map[string]*result)
+	// iterate over all coin informations
+	for _, info := range all {
+		coin := info.(map[string]interface{})
+		name := coin["name"].(string)
+		_, ok := names[name]
+		if ok {
+			// we are interested in this coin -> store price and symbol
+			f := coin["price"].(map[string]interface{})["eur"].(string)
+			p, err := strconv.ParseFloat(f, 64)
+			if err != nil {
+				fatal(err)
+			}
+			prices[name] = &result{symbol: coin["symbol"].(string), price: p}
 		}
-		prices[r.symbol] = r.price
 	}
+	// output coin prices
 	t := time.Now().Format("2006/01/02 15:04:05")
-	for _, sym := range coins {
-		fmt.Printf("P %s %s %7.2f EUR\n", t, sym, prices[sym])
+	for _, name := range coins {
+		fmt.Printf("P %s %s %7.2f EUR\n", t, prices[name].symbol,
+			prices[name].price)
 	}
 }
