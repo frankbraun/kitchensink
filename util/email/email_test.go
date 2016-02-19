@@ -16,6 +16,7 @@ func TestIsValid(t *testing.T) {
 	}{
 		{"john.doe@example.com", true},
 		{"john@example.com", true},
+		{"john@examplecom", true}, // domains without '.' can be valid!
 		{"@example.com", false},
 		{"john.doeexample.com", false},
 		{"johnexamplecom", false},
