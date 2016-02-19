@@ -23,7 +23,7 @@ func Fatal(err error) {
 // Usage prints the usage of the running command with synopsis and the defined
 // options from the flag package to stderr and exits with error code 1.
 func Usage(synopsis string) {
-	fmt.Fprintf(os.Stderr, "Usage: %s %s\n", os.Args[0], synopsis)
+	fmt.Fprintf(os.Stderr, "usage: %s %s\n", os.Args[0], synopsis)
 	flag.PrintDefaults()
 	os.Exit(1)
 }
