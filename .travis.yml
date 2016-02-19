@@ -2,6 +2,7 @@ language: go
 go: 1.5
 before_install:
   - go get -v github.com/clbanning/mxj
+  - go get -v gopkg.in/yaml.v2
   - go get github.com/frankbraun/gocheck
 script:
   - gocheck -g -c
