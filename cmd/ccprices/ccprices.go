@@ -141,6 +141,7 @@ func main() {
 	t := time.Now().Format("2006/01/02 15:04:05")
 	fmt.Printf("P %s USD %11.6f EUR\n", t, 1/rates["USD"].(float64))
 	fmt.Printf("P %s GBP %11.6f EUR\n", t, 1/rates["GBP"].(float64))
+	fmt.Printf("P %s CHF %11.6f EUR\n", t, 1/rates["CHF"].(float64))
 	fmt.Printf("P %s CZK %11.6f EUR\n", t, 1/rates["CZK"].(float64))
 	fmt.Printf("P %s XAU %11.6f EUR\n", t, xau)
 	fmt.Printf("P %s XAG %11.6f EUR\n", t, xag)
