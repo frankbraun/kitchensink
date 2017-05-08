@@ -12,18 +12,66 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/fsnotify/fsnotify"
 	"github.com/mutecomm/mute/util/browser"
 	"github.com/russross/blackfriday"
 )
 
 var html []byte
 
-func serveMarkdown(filename string) error {
+func render(filename string) ([]byte, error) {
 	md, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	html := blackfriday.MarkdownCommon(md)
+	fmt.Println("rendering", filename)
+	return html, nil
+}
+
+func serveMarkdown(filename string) error {
+	// render markdown
+	var err error
+	html, err = render(filename)
 	if err != nil {
 		return err
 	}
-	html = blackfriday.MarkdownCommon(md)
+	// watch markdown file for changes and rerender if necessary
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		return err
+	}
+	defer watcher.Close()
+	if err := watcher.Add(filename); err != nil {
+		return err
+	}
+	go func() {
+		for {
+			var err error
+			select {
+			case event := <-watcher.Events:
+				fmt.Println("event:", event)
+				if event.Op&fsnotify.Remove == fsnotify.Remove {
+					if err := watcher.Add(filename); err != nil {
+						fmt.Println("error:", err)
+					}
+					html, err = render(filename)
+					if err != nil {
+						fmt.Println("error:", err)
+					}
+				}
+				if event.Op&fsnotify.Write == fsnotify.Write {
+					html, err = render(filename)
+					if err != nil {
+						fmt.Println("error:", err)
+					}
+				}
+			case err := <-watcher.Errors:
+				fmt.Println("error:", err)
+			}
+		}
+	}()
+	// serve markdown
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Write(html)
