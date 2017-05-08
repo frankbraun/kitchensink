@@ -2,7 +2,7 @@
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-// markup serves markup files as HTML on localhost.
+// Package markup serves markup files as HTML on localhost.
 package markup
 
 import (
@@ -16,10 +16,14 @@ import (
 
 var html []byte
 
+// Renderer is the markup interface.
 type Renderer interface {
 	Render(filename string) ([]byte, error)
 }
 
+// Serve serves markup in file filename rendered with r on localhost.
+// It automatically rerenders the markup if the file is changed.
+// It also tries to open a browser.
 func Serve(r Renderer, filename string) error {
 	// render markdown
 	var err error
