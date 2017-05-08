@@ -8,83 +8,21 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"net"
-	"net/http"
 	"os"
 
-	"github.com/fsnotify/fsnotify"
-	"github.com/mutecomm/mute/util/browser"
+	"github.com/frankbraun/kitchensink/markup"
 	"github.com/russross/blackfriday"
 )
 
-var html []byte
+type markdownRenderer struct{}
 
-func render(filename string) ([]byte, error) {
+func (r markdownRenderer) Render(filename string) ([]byte, error) {
 	md, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
-	html := blackfriday.MarkdownCommon(md)
 	fmt.Println("rendering", filename)
-	return html, nil
-}
-
-func serveMarkdown(filename string) error {
-	// render markdown
-	var err error
-	html, err = render(filename)
-	if err != nil {
-		return err
-	}
-	// watch markdown file for changes and rerender if necessary
-	watcher, err := fsnotify.NewWatcher()
-	if err != nil {
-		return err
-	}
-	defer watcher.Close()
-	if err := watcher.Add(filename); err != nil {
-		return err
-	}
-	go func() {
-		for {
-			var err error
-			select {
-			case event := <-watcher.Events:
-				fmt.Println("event:", event)
-				if event.Op&fsnotify.Remove == fsnotify.Remove {
-					if err := watcher.Add(filename); err != nil {
-						fmt.Println("error:", err)
-					}
-					html, err = render(filename)
-					if err != nil {
-						fmt.Println("error:", err)
-					}
-				}
-				if event.Op&fsnotify.Write == fsnotify.Write {
-					html, err = render(filename)
-					if err != nil {
-						fmt.Println("error:", err)
-					}
-				}
-			case err := <-watcher.Errors:
-				fmt.Println("error:", err)
-			}
-		}
-	}()
-	// serve markdown
-	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.Write(html)
-	})
-	listener, err := net.Listen("tcp", ":0")
-	if err != nil {
-		return err
-	}
-	port := listener.Addr().(*net.TCPAddr).Port
-	addr := fmt.Sprintf("http://localhost:%d/", port)
-	fmt.Println("serving at", addr)
-	go browser.Open(addr)
-	return http.Serve(listener, nil)
+	return blackfriday.MarkdownCommon(md), nil
 }
 
 func fatal(err error) {
@@ -101,7 +39,8 @@ func main() {
 	if len(os.Args) != 2 {
 		usage()
 	}
-	if err := serveMarkdown(os.Args[1]); err != nil {
+	err := markup.Serve(new(markdownRenderer), os.Args[1])
+	if err != nil {
 		fatal(err)
 	}
 }
