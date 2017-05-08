@@ -25,7 +25,7 @@ const (
 var (
 	// Quandl API key can be set via environment variable QUANDL_API_KEY
 	quandl = os.Getenv("QUANDL_API_KEY")
-	coins  = []string{"Bitcoin", "Decred", "Namecoin"}
+	coins  = []string{"Bitcoin", "Decred", "Ethereum", "Ethereum Classic", "Monero", "Namecoin", "Zcash"}
 )
 
 type result struct {
@@ -143,6 +143,7 @@ func main() {
 	fmt.Printf("P %s GBP %11.6f EUR\n", t, 1/rates["GBP"].(float64))
 	fmt.Printf("P %s CHF %11.6f EUR\n", t, 1/rates["CHF"].(float64))
 	fmt.Printf("P %s CZK %11.6f EUR\n", t, 1/rates["CZK"].(float64))
+	fmt.Printf("P %s THB %11.6f EUR\n", t, 1/rates["THB"].(float64))
 	fmt.Printf("P %s XAU %11.6f EUR\n", t, xau)
 	fmt.Printf("P %s XAG %11.6f EUR\n", t, xag)
 	for _, name := range coins {
