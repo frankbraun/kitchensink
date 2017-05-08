@@ -2,27 +2,24 @@
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-// mdserve serves Markdown files as HTML on localhost.
+// rstserve serves reStructuredText files as HTML on localhost.
 package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
+	"os/exec"
 
 	"github.com/frankbraun/kitchensink/markup"
-	"github.com/russross/blackfriday"
 )
 
-type markdownRenderer struct{}
+var rstRenderer = "rst2html.py"
 
-func (r markdownRenderer) Render(filename string) ([]byte, error) {
+type reStructuredTextRenderer struct{}
+
+func (r reStructuredTextRenderer) Render(filename string) ([]byte, error) {
 	fmt.Println("rendering", filename)
-	md, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return nil, err
-	}
-	return blackfriday.MarkdownCommon(md), nil
+	return exec.Command(rstRenderer, filename).Output()
 }
 
 func fatal(err error) {
@@ -31,7 +28,7 @@ func fatal(err error) {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: %s markdown_file\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "usage: %s rst_file\n", os.Args[0])
 	os.Exit(1)
 }
 
@@ -39,7 +36,7 @@ func main() {
 	if len(os.Args) != 2 {
 		usage()
 	}
-	err := markup.Serve(new(markdownRenderer), os.Args[1])
+	err := markup.Serve(new(reStructuredTextRenderer), os.Args[1])
 	if err != nil {
 		fatal(err)
 	}
