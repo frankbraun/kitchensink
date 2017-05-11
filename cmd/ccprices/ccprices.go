@@ -25,7 +25,16 @@ const (
 var (
 	// Quandl API key can be set via environment variable QUANDL_API_KEY
 	quandl = os.Getenv("QUANDL_API_KEY")
-	coins  = []string{"Bitcoin", "Decred", "Ethereum", "Ethereum Classic", "Monero", "Namecoin", "Zcash"}
+	coins  = []string{
+		"Bitcoin",
+		"Decred",
+		"Ethereum",
+		"Ethereum Classic",
+		"Litecoin",
+		"Monero",
+		"Namecoin",
+		"Zcash",
+	}
 )
 
 type result struct {
