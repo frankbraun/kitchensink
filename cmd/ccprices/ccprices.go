@@ -42,12 +42,30 @@ type result struct {
 	price  float64
 }
 
-func getEuroExchangeRates() (map[string]interface{}, error) {
-	resp, err := http.Get(euroAPI)
-	b, err := ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
+func httpGetWithWarning(url string) ([]byte, error) {
+	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		warning(fmt.Sprintf("GET %s: %s", url, resp.Status))
+		return nil, nil
+	}
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return b, err
+}
+
+func getEuroExchangeRates() (map[string]interface{}, error) {
+	b, err := httpGetWithWarning(euroAPI)
+	if err != nil {
+		return nil, err
+	}
+	if b == nil {
+		return nil, nil
 	}
 	jsn := make(map[string]interface{})
 	if err := json.Unmarshal(b, &jsn); err != nil {
@@ -60,11 +78,12 @@ func getLBMAPrice(api string, dataIndex int) (float64, error) {
 	if quandl != "" {
 		api += "?api_key=" + quandl
 	}
-	resp, err := http.Get(api)
-	b, err := ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
+	b, err := httpGetWithWarning(api)
 	if err != nil {
 		return 0, err
+	}
+	if b == nil {
+		return 0, nil
 	}
 	jsn := make(map[string]interface{})
 	if err := json.Unmarshal(b, &jsn); err != nil {
@@ -83,20 +102,22 @@ func getLBMAPrice(api string, dataIndex int) (float64, error) {
 }
 
 func getCoinPrices() ([]interface{}, error) {
-	resp, err := http.Get(coinsAPI)
+	b, err := httpGetWithWarning(coinsAPI)
 	if err != nil {
 		return nil, err
 	}
-	b, err := ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
-	if err != nil {
-		return nil, err
+	if b == nil {
+		return nil, nil
 	}
 	jsn := make(map[string]interface{})
 	if err := json.Unmarshal(b, &jsn); err != nil {
 		return nil, err
 	}
 	return jsn["markets"].([]interface{}), nil
+}
+
+func warning(warn string) {
+	fmt.Fprintf(os.Stderr, "%s: warning: %s\n", os.Args[0], warn)
 }
 
 func fatal(err error) {
@@ -126,37 +147,51 @@ func main() {
 		fatal(err)
 	}
 	// construct map of coin names we are interested in
-	names := make(map[string]struct{})
-	for _, name := range coins {
-		names[name] = struct{}{}
-	}
-	prices := make(map[string]*result)
-	// iterate over all coin informations
-	for _, info := range all {
-		coin := info.(map[string]interface{})
-		name := coin["name"].(string)
-		_, ok := names[name]
-		if ok {
-			// we are interested in this coin -> store price and symbol
-			f := coin["price"].(map[string]interface{})["eur"].(string)
-			p, err := strconv.ParseFloat(f, 64)
-			if err != nil {
-				fatal(err)
+	var (
+		names  map[string]struct{}
+		prices map[string]*result
+	)
+	if all != nil {
+		names = make(map[string]struct{})
+		for _, name := range coins {
+			names[name] = struct{}{}
+		}
+		prices = make(map[string]*result)
+		// iterate over all coin informations
+		for _, info := range all {
+			coin := info.(map[string]interface{})
+			name := coin["name"].(string)
+			_, ok := names[name]
+			if ok {
+				// we are interested in this coin -> store price and symbol
+				f := coin["price"].(map[string]interface{})["eur"].(string)
+				p, err := strconv.ParseFloat(f, 64)
+				if err != nil {
+					fatal(err)
+				}
+				prices[name] = &result{symbol: coin["symbol"].(string), price: p}
 			}
-			prices[name] = &result{symbol: coin["symbol"].(string), price: p}
 		}
 	}
 	// output all prices
 	t := time.Now().Format("2006/01/02 15:04:05")
-	fmt.Printf("P %s USD %11.6f EUR\n", t, 1/rates["USD"].(float64))
-	fmt.Printf("P %s GBP %11.6f EUR\n", t, 1/rates["GBP"].(float64))
-	fmt.Printf("P %s CHF %11.6f EUR\n", t, 1/rates["CHF"].(float64))
-	fmt.Printf("P %s CZK %11.6f EUR\n", t, 1/rates["CZK"].(float64))
-	fmt.Printf("P %s THB %11.6f EUR\n", t, 1/rates["THB"].(float64))
-	fmt.Printf("P %s XAU %11.6f EUR\n", t, xau)
-	fmt.Printf("P %s XAG %11.6f EUR\n", t, xag)
-	for _, name := range coins {
-		fmt.Printf("P %s %s %11.6f EUR\n", t, prices[name].symbol,
-			prices[name].price)
+	if rates != nil {
+		fmt.Printf("P %s USD %11.6f EUR\n", t, 1/rates["USD"].(float64))
+		fmt.Printf("P %s GBP %11.6f EUR\n", t, 1/rates["GBP"].(float64))
+		fmt.Printf("P %s CHF %11.6f EUR\n", t, 1/rates["CHF"].(float64))
+		fmt.Printf("P %s CZK %11.6f EUR\n", t, 1/rates["CZK"].(float64))
+		fmt.Printf("P %s THB %11.6f EUR\n", t, 1/rates["THB"].(float64))
+	}
+	if xau != 0 {
+		fmt.Printf("P %s XAU %11.6f EUR\n", t, xau)
+	}
+	if xag != 0 {
+		fmt.Printf("P %s XAG %11.6f EUR\n", t, xag)
+	}
+	if all != nil {
+		for _, name := range coins {
+			fmt.Printf("P %s %s %11.6f EUR\n", t, prices[name].symbol,
+				prices[name].price)
+		}
 	}
 }
