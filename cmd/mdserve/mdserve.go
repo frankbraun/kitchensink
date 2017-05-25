@@ -6,6 +6,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -34,7 +35,9 @@ const (
 		blackfriday.EXTENSION_DEFINITION_LISTS
 )
 
-type markdownRenderer struct{}
+type markdownRenderer struct {
+	toc bool
+}
 
 func (r markdownRenderer) Render(filename string) ([]byte, error) {
 	fmt.Println("rendering", filename)
@@ -42,7 +45,11 @@ func (r markdownRenderer) Render(filename string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	renderer := blackfriday.HtmlRenderer(commonHtmlFlags, "", "")
+	flags := commonHtmlFlags
+	if r.toc {
+		flags |= blackfriday.HTML_TOC
+	}
+	renderer := blackfriday.HtmlRenderer(flags, "", "")
 	options := blackfriday.Options{
 		Extensions: commonExtensions,
 	}
@@ -55,15 +62,19 @@ func fatal(err error) {
 }
 
 func usage() {
-	fmt.Fprintf(os.Stderr, "usage: %s markdown_file\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "usage: %s [options] markdown_file\n", os.Args[0])
+	flag.PrintDefaults()
 	os.Exit(1)
 }
 
 func main() {
-	if len(os.Args) != 2 {
+	toc := flag.Bool("toc", false, "generate table of contents (TOC)")
+	flag.Parse()
+	if flag.NArg() != 1 {
 		usage()
 	}
-	err := markup.Serve(new(markdownRenderer), os.Args[1])
+	mdr := markdownRenderer{toc: *toc}
+	err := markup.Serve(mdr, flag.Arg(0))
 	if err != nil {
 		fatal(err)
 	}
