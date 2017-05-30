@@ -19,7 +19,7 @@ const (
 	euroAPI  = "http://api.fixer.io/latest"
 	xauAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?limit=1"
 	xagAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/SILVER.json?limit=1"
-	coinsAPI = "http://coinmarketcap.northpole.ro/api/v5/all.json"
+	coinsAPI = "https://api.coinmarketcap.com/v1/ticker/?convert=EUR"
 )
 
 var (
@@ -109,11 +109,11 @@ func getCoinPrices() ([]interface{}, error) {
 	if b == nil {
 		return nil, nil
 	}
-	jsn := make(map[string]interface{})
+	jsn := make([]interface{}, 0)
 	if err := json.Unmarshal(b, &jsn); err != nil {
 		return nil, err
 	}
-	return jsn["markets"].([]interface{}), nil
+	return jsn, nil
 }
 
 func warning(warn string) {
@@ -164,7 +164,7 @@ func main() {
 			_, ok := names[name]
 			if ok {
 				// we are interested in this coin -> store price and symbol
-				f := coin["price"].(map[string]interface{})["eur"].(string)
+				f := coin["price_eur"].(string)
 				p, err := strconv.ParseFloat(f, 64)
 				if err != nil {
 					fatal(err)
