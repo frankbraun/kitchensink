@@ -6,13 +6,19 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"io"
 	"os"
+	"os/signal"
+	"syscall"
 
+	ptmx "github.com/frankbraun/pty"
 	"github.com/frankbraun/tcell"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
-func draw(s tcell.Screen) {
+func drawBorder(s tcell.Screen) {
 	w, h := s.Size()
 	for x := 0; x < w; x++ {
 		s.SetContent(x, 0, tcell.RuneBlock, nil, tcell.StyleDefault)
@@ -24,10 +30,49 @@ func draw(s tcell.Screen) {
 	}
 }
 
-func tcelltest() error {
-	s, err := tcell.NewScreen()
-	if err != nil {
-		return err
+func tcelltest(pty bool) error {
+	var (
+		s   tcell.Screen
+		err error
+	)
+	if pty {
+		// run tcell through pseudoterminal (pty) master/slave-layer
+		stdinfd := int(os.Stdin.Fd())
+		state, err := terminal.MakeRaw(stdinfd)
+		if err != nil {
+			return err
+		}
+		defer terminal.Restore(stdinfd, state)
+		pty, tty, err := ptmx.Open()
+		if err != nil {
+			return err
+		}
+		defer pty.Close()
+		defer tty.Close()
+		sigChan := make(chan os.Signal, 2)
+		go func() {
+			ptmx.InheritSize(os.Stdin, pty)
+			for _ = range sigChan {
+				ptmx.InheritSize(os.Stdin, pty)
+			}
+		}()
+		signal.Notify(sigChan, syscall.SIGWINCH)
+		go func() {
+			io.Copy(os.Stdout, pty)
+		}()
+		go func() {
+			io.Copy(pty, os.Stdin)
+		}()
+		s, err = tcell.NewTerminfoScreenWithTTY(os.Getenv("TERM"), tty)
+		if err != nil {
+			return err
+		}
+	} else {
+		// run tcell directly
+		s, err = tcell.NewScreen()
+		if err != nil {
+			return err
+		}
 	}
 	defer s.Fini()
 	if err = s.Init(); err != nil {
@@ -37,7 +82,7 @@ func tcelltest() error {
 		Foreground(tcell.ColorBlack).
 		Background(tcell.ColorWhite))
 	s.Clear()
-	draw(s)
+	drawBorder(s)
 	s.Show()
 	for {
 		ev := s.PollEvent()
@@ -46,7 +91,7 @@ func tcelltest() error {
 			return nil
 		case *tcell.EventResize:
 			s.Clear()
-			draw(s)
+			drawBorder(s)
 			s.Sync()
 		}
 	}
@@ -58,8 +103,20 @@ func fatal(err error) {
 	os.Exit(1)
 }
 
+func usage() {
+	fmt.Fprintf(os.Stderr, "usage: %s Go_file\n", os.Args[0])
+	flag.PrintDefaults()
+	os.Exit(1)
+}
+
 func main() {
-	if err := tcelltest(); err != nil {
+	pty := flag.Bool("pty", false,
+		"run tcell through pseudoterminal (pty) master/slave-layer ")
+	flag.Parse()
+	if flag.NArg() != 0 {
+		usage()
+	}
+	if err := tcelltest(*pty); err != nil {
 		fatal(err)
 	}
 }
