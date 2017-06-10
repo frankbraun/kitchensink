@@ -95,7 +95,6 @@ func tcelltest(pty bool) error {
 			s.Sync()
 		}
 	}
-	return nil
 }
 
 func fatal(err error) {
