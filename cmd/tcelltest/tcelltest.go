@@ -52,7 +52,7 @@ func tcelltest(pty bool) error {
 		sigChan := make(chan os.Signal, 2)
 		go func() {
 			ptmx.InheritSize(os.Stdin, pty)
-			for _ = range sigChan {
+			for range sigChan {
 				ptmx.InheritSize(os.Stdin, pty)
 			}
 		}()
