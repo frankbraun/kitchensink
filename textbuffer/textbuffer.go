@@ -125,6 +125,15 @@ func New(b []byte) (*TextBuffer, error) {
 	return &tb, nil
 }
 
+// NewFile reads all UTF-8 text from filename into a new TextBuffer.
+func NewFile(filename string) (*TextBuffer, error) {
+	b, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	return New(b)
+}
+
 // NewReader reads all UTF-8 text from r into a new TextBuffer.
 func NewReader(r io.Reader) (*TextBuffer, error) {
 	b, err := ioutil.ReadAll(r)
