@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 
-	"github.com/frankbraun/kitchensink/textbuffer"
 	"github.com/gdamore/tcell"
+	"github.com/mutecomm/mute/tui/textbuffer"
 )
 
 var (
@@ -49,7 +50,11 @@ func redraw(s tcell.Screen, tb *textbuffer.TextBuffer, w, h int) {
 }
 
 func least(filename string) error {
-	tb, err := textbuffer.NewFile(filename)
+	buf, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return err
+	}
+	tb, err := textbuffer.New(buf)
 	if err != nil {
 		return err
 	}
