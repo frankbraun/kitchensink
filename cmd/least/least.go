@@ -8,12 +8,17 @@ import (
 	"github.com/gdamore/tcell"
 )
 
+var (
+	curX int
+	curY int
+)
+
 func draw(s tcell.Screen, tb *textbuffer.TextBuffer, w, h int) {
-	for y := 0; y < h && y < tb.Lines(); y++ {
+	for y := 0; y < h && y+curY < tb.Lines(); y++ {
 		x := 0
-		lineLen := tb.LineLenCell(y)
-		for x < w && x < lineLen {
-			c, cw := tb.GetCell(x, y)
+		lineLen := tb.LineLenCell(y + curY)
+		for x < w && x+curX < lineLen {
+			c, cw := tb.GetCell(x+curX, y+curY)
 			if x+cw <= lineLen {
 				s.SetContent(x, y, c[0], c[1:], tcell.StyleDefault)
 			}
@@ -22,10 +27,23 @@ func draw(s tcell.Screen, tb *textbuffer.TextBuffer, w, h int) {
 	}
 }
 
+func redraw(s tcell.Screen, tb *textbuffer.TextBuffer, w, h int) {
+	s.Clear()
+	draw(s, tb, w, h)
+	s.Show()
+}
+
 func least(filename string) error {
 	tb, err := textbuffer.NewFile(filename)
 	if err != nil {
 		return err
+	}
+	maxX := 0
+	maxY := tb.Lines()
+	for y := 0; y < maxY; y++ {
+		if tb.LineLenCell(y) > maxX {
+			maxX = tb.LineLenCell(y)
+		}
 	}
 	s, err := tcell.NewScreen()
 	if err != nil {
@@ -40,14 +58,56 @@ func least(filename string) error {
 		Background(tcell.ColorWhite))
 	s.Clear()
 	w, h := s.Size()
-	s.Clear()
-	draw(s, tb, w, h)
-	s.Show()
+	redraw(s, tb, w, h)
 	for {
 		ev := s.PollEvent()
 		switch ev.(type) {
 		case *tcell.EventKey:
-			return nil
+			switch ev.(*tcell.EventKey).Rune() {
+			case ' ': // page down
+				curY += h
+				if curY >= maxY {
+					curY = maxY - h
+				}
+				redraw(s, tb, w, h)
+			case 'b': // page down
+				curY -= h
+				if curY < 0 {
+					curY = 0
+				}
+				redraw(s, tb, w, h)
+			case 'g': // top
+				curY = 0
+				redraw(s, tb, w, h)
+			case 'G': // bottom
+				curY = maxY - h - 1
+				if curY < 0 {
+					curY = 0
+				}
+				redraw(s, tb, w, h)
+			case 'j': // down
+				if curY < maxY {
+					curY++
+				}
+				redraw(s, tb, w, h)
+			case 'k': // up
+				if curY > 0 {
+					curY--
+				}
+				redraw(s, tb, w, h)
+			case 'h': // left
+				if curX > 0 {
+					curX--
+				}
+				redraw(s, tb, w, h)
+			case 'l': // right
+				if curX < maxX {
+					curX++
+				}
+				redraw(s, tb, w, h)
+			case 'q': // quit
+				return nil
+			}
 		case *tcell.EventResize:
 			w, h = s.Size()
 			s.Clear()
