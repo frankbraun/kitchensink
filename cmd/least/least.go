@@ -11,10 +11,12 @@ import (
 var (
 	curX int
 	curY int
+	maxX int
+	maxY int
 )
 
 func draw(s tcell.Screen, tb *textbuffer.TextBuffer, w, h int) {
-	for y := 0; y < h && y+curY < tb.Lines(); y++ {
+	for y := 0; y+1 < h && y+curY < tb.Lines(); y++ {
 		x := 0
 		lineLen := tb.LineLenCell(y + curY)
 		for x < w && x+curX < lineLen {
@@ -24,6 +26,19 @@ func draw(s tcell.Screen, tb *textbuffer.TextBuffer, w, h int) {
 			}
 			x += cw
 		}
+	}
+	// draw status bar
+	bar := fmt.Sprintf("w=%d, h=%d, curX=%d, curY=%d, maxX=%d, maxY=%d",
+		w, h, curX, curY, maxX, maxY)
+	style := tcell.StyleDefault.
+		Foreground(tcell.ColorWhite).
+		Background(tcell.ColorBlack)
+	for x := 0; x < w; x++ {
+		var r rune
+		if x < len(bar) {
+			r = rune(bar[x])
+		}
+		s.SetContent(x, h-1, r, nil, style)
 	}
 }
 
@@ -38,8 +53,7 @@ func least(filename string) error {
 	if err != nil {
 		return err
 	}
-	maxX := 0
-	maxY := tb.Lines()
+	maxY = tb.Lines()
 	for y := 0; y < maxY; y++ {
 		if tb.LineLenCell(y) > maxX {
 			maxX = tb.LineLenCell(y)
