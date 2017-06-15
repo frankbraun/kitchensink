@@ -19,6 +19,18 @@ func TestHelloWorld(t *testing.T) {
 	assert.Equal(t, 9, tb.LineLenRune(0))
 	assert.Equal(t, 9, tb.LineLenChar(0))
 	assert.Equal(t, 11, tb.LineLenCell(0))
+	assert.Equal(t, 'H', tb.GetChar(0, 0)[0])
+	assert.Equal(t, '世', tb.GetChar(7, 0)[0])
+	assert.Equal(t, '界', tb.GetChar(8, 0)[0])
+	c, w := tb.GetCell(0, 0)
+	assert.Equal(t, 'H', c[0])
+	assert.Equal(t, 1, w)
+	c, w = tb.GetCell(7, 0)
+	assert.Equal(t, '世', c[0])
+	assert.Equal(t, 2, w)
+	c, w = tb.GetCell(8, 0)
+	assert.Equal(t, '世', c[0])
+	assert.Equal(t, 0, w)
 	var b bytes.Buffer
 	err = tb.Write(&b)
 	if assert.NoError(t, err) {

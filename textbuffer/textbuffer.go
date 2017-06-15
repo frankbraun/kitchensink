@@ -142,23 +142,41 @@ func NewString(s string) (*TextBuffer, error) {
 // GetRune returns the rune in line y at position x of the rune coordinate
 // system.
 func (tb *TextBuffer) GetRune(x, y int) rune {
-	// TODO
-	return 0
+	if y < tb.Lines() {
+		if x < len(tb.lines[y].runes) {
+			return tb.lines[y].runes[x]
+		}
+	}
+	return utf8.RuneError
 }
 
 // GetChar returns the character in line y at position x of the character
 // coordinate system.
 func (tb *TextBuffer) GetChar(x, y int) []rune {
-	// TODO
+	if y < tb.Lines() {
+		if x < len(tb.lines[y].chars) {
+			var l int
+			if x > 0 {
+				l = tb.lines[y].chars[x-1]
+			}
+			h := tb.lines[y].chars[x]
+			return tb.lines[y].runes[l:h]
+		}
+	}
 	return nil
 }
 
 // GetCell returns the character c in line y at position x of the cell
-// coordinate system. It also returns the width of the character and indicates
-// if it is the secondHalf of a wide character.
-func (tb *TextBuffer) GetCell(x, y int) (c []rune, width int, secondHalf bool) {
-	// TODO
-	return nil, 0, false
+// coordinate system. It also returns the width of the character:
+// 1: narrow, 2: wide, first half, 0: wide, second half.
+func (tb *TextBuffer) GetCell(x, y int) (c []rune, width int) {
+	if y < tb.Lines() {
+		if x < len(tb.lines[y].cells) {
+			c := tb.lines[y].cells[x]
+			return tb.GetChar(c.charIndex, y), c.charWidth
+		}
+	}
+	return nil, 0
 }
 
 // Lines returns the number of lines.
