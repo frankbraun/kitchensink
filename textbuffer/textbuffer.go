@@ -5,7 +5,7 @@
 // Package textbuffer implements a buffer for displaying and editing UTF-8 text.
 //
 // Lines are separated by newlines ('\n', the Unicode code point U+000A) and
-// the newline character is not contained explicitly in a line of a text
+// the newline character is not contained explicitly in the lines of a text
 // buffer. This makes adressing lines trivial, we use the y-coordinate
 // starting at 0 for addressing them.
 //
@@ -31,7 +31,7 @@
 // only possible one.
 // With the help of package "github.com/mattn/go-runewidth" a stream of runes
 // is split into characters.
-// We address characters in the character coordinate system starting at 0
+// We address characters in the character coordinate system starting at 0.
 //
 // When displaying characters in a terminal they usually occupy one cell.
 // However, wide characters occupy two cells (for example, East Asian full
