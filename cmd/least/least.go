@@ -54,10 +54,7 @@ func least(filename string) error {
 	if err != nil {
 		return err
 	}
-	tb, err := textbuffer.New(buf)
-	if err != nil {
-		return err
-	}
+	tb := textbuffer.New(buf)
 	maxY = tb.Lines()
 	for y := 0; y < maxY; y++ {
 		if tb.LineLenCell(y) > maxX {
