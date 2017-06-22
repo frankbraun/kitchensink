@@ -57,6 +57,7 @@ func pandocProcess(content []byte) ([]byte, error) {
 	}()
 	out, err := cmd.CombinedOutput()
 	if err != nil {
+		fmt.Fprintln(os.Stderr, out)
 		return nil, err
 	}
 	return bytes.TrimSpace(out), nil
