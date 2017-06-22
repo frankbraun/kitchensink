@@ -3,9 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
+	"regexp"
+
+	"github.com/spf13/hugo/parser"
+	"gopkg.in/russross/blackfriday.v2"
+	"gopkg.in/yaml.v2"
 )
 
 func pandoc(content []byte, pdfFile string, toc bool) error {
@@ -31,11 +35,56 @@ func pandoc(content []byte, pdfFile string, toc bool) error {
 }
 
 func md2pdf(mdFile, pdfFile string, toc bool) error {
-	src, err := ioutil.ReadFile(mdFile)
+	// parse the file with hugo/parser to extract front matter
+	fp, err := os.Open(mdFile)
 	if err != nil {
 		return err
 	}
-	if err := pandoc(src, pdfFile, toc); err != nil {
+	defer fp.Close()
+	page, err := parser.ReadFrom(fp)
+	if err != nil {
+		return err
+	}
+
+	// parse YAML frontmatter
+	yml, err := page.Metadata()
+	if err != nil {
+		return err
+	}
+
+	// parse title (h1) from markdown
+	opt := blackfriday.WithExtensions(blackfriday.CommonExtensions)
+	mdParser := blackfriday.New(opt)
+	ast := mdParser.Parse(page.Content())
+	var title string
+	ast.Walk(func(node *blackfriday.Node, entering bool) blackfriday.WalkStatus {
+		if node.Type == blackfriday.Heading {
+			if node.HeadingData.Level == 1 {
+				title = string(node.FirstChild.Literal)
+				return blackfriday.Terminate
+			}
+		}
+		return blackfriday.GoToNext
+	})
+
+	// add title to frontmatter and remove it from markdown
+	md, err := yaml.Marshal(yml)
+	if err != nil {
+		return err
+	}
+	title = fmt.Sprintf("---\ntitle: %s\n", title)
+	md = append([]byte(title), md...)
+	md = append(md, []byte("---\n\n")...)
+	re, err := regexp.Compile("^.+\n=+\n")
+	if err != nil {
+		return err
+	}
+	content := re.ReplaceAll(page.Content(), nil)
+	md = append(md, content...)
+
+	//fmt.Println(string(md))
+
+	if err := pandoc(md, pdfFile, toc); err != nil {
 		return err
 	}
 	return nil
