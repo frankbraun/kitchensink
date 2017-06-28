@@ -46,7 +46,7 @@ func isMarkdownFile(f os.FileInfo) bool {
 }
 
 func pandocProcess(content []byte) ([]byte, error) {
-	cmd := exec.Command("pandoc", "-t", "markdown")
+	cmd := exec.Command("pandoc", "-t", "markdown", "--reference-links")
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return nil, err

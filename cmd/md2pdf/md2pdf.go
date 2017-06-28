@@ -13,7 +13,13 @@ import (
 )
 
 func pandoc(content []byte, pdfFile string, toc bool) error {
-	args := []string{"--standalone", "-o", pdfFile}
+	args := []string{
+		"--standalone", "-o", pdfFile,
+		//"--variable", "classoption=twocolumn",
+		"--variable", "papersize=a4paper",
+		"--variable", "links-as-notes",
+		"--filter", "pandoc-citeproc",
+	}
 	if toc {
 		args = append(args, "--toc")
 	}
