@@ -4,6 +4,8 @@ before_install:
   - go get -v github.com/clbanning/mxj
   - go get -v github.com/mattn/go-runewidth
   - go get -v github.com/stretchr/testify
+  - go get -v github.com/spf13/hugo/parser
+  - go get -v gopkg.in/russross/blackfriday.v2
   - go get -v gopkg.in/yaml.v2
   - go get github.com/frankbraun/gocheck
 script:
