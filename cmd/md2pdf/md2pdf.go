@@ -3,9 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"regexp"
+	"strings"
 
 	"github.com/spf13/hugo/parser"
 	"gopkg.in/russross/blackfriday.v2"
@@ -40,7 +42,7 @@ func pandoc(content []byte, pdfFile string, toc bool) error {
 	return nil
 }
 
-func md2pdf(mdFile, pdfFile string, toc bool) error {
+func md2pdf(mdFile, pdfFile string, toc, hugo bool) error {
 	// parse the file with hugo/parser to extract front matter
 	fp, err := os.Open(mdFile)
 	if err != nil {
@@ -81,6 +83,12 @@ func md2pdf(mdFile, pdfFile string, toc bool) error {
 	title = fmt.Sprintf("---\ntitle: %s\n", title)
 	md = append([]byte(title), md...)
 	md = append(md, []byte("---\n\n")...)
+	if hugo {
+		filename := strings.TrimSuffix(mdFile, ".md") + ".pdf"
+		download := fmt.Sprintf("[download article as [PDF](/%s) or [markdown](/%s)]))\n\n", filename, mdFile)
+		md = append(md, []byte(download)...)
+		md = append(md, []byte("<!--more-->\n")...)
+	}
 	re, err := regexp.Compile("^.+\n=+\n")
 	if err != nil {
 		return err
@@ -90,8 +98,14 @@ func md2pdf(mdFile, pdfFile string, toc bool) error {
 
 	//fmt.Println(string(md))
 
-	if err := pandoc(md, pdfFile, toc); err != nil {
-		return err
+	if hugo {
+		if err := ioutil.WriteFile(pdfFile, md, 0600); err != nil {
+			return err
+		}
+	} else {
+		if err := pandoc(md, pdfFile, toc); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -109,12 +123,13 @@ func usage() {
 }
 
 func main() {
+	hugo := flag.Bool("hugo", false, "generate output for Hugo instead of PDF")
 	toc := flag.Bool("toc", false, "generate table of contents (TOC)")
 	flag.Parse()
 	if flag.NArg() != 2 {
 		usage()
 	}
-	if err := md2pdf(flag.Arg(0), flag.Arg(1), *toc); err != nil {
+	if err := md2pdf(flag.Arg(0), flag.Arg(1), *toc, *hugo); err != nil {
 		fatal(err)
 	}
 }
