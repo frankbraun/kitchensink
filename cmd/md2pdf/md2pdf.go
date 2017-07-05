@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -84,8 +85,9 @@ func md2pdf(mdFile, pdfFile string, toc, hugo bool) error {
 	md = append([]byte(title), md...)
 	md = append(md, []byte("---\n\n")...)
 	if hugo {
-		filename := strings.TrimSuffix(mdFile, ".md") + ".pdf"
-		download := fmt.Sprintf("[download article as [PDF](/%s) or [markdown](/%s)]))\n\n", filename, mdFile)
+		base := filepath.Base(mdFile)
+		filename := strings.TrimSuffix(base, ".md") + ".pdf"
+		download := fmt.Sprintf("[download article as [PDF](/%s) or [markdown](/%s)]))\n\n", filename, base)
 		md = append(md, []byte(download)...)
 		md = append(md, []byte("<!--more-->\n")...)
 	}
