@@ -45,8 +45,8 @@ func isMarkdownFile(f os.FileInfo) bool {
 	return !f.IsDir() && !strings.HasPrefix(name, ".") && (ext == "md" || ext == "markdown")
 }
 
-func pandocProcess(content []byte) ([]byte, error) {
-	cmd := exec.Command("pandoc", "-t", "markdown", "--reference-links")
+func run(command []string, content []byte) ([]byte, error) {
+	cmd := exec.Command(command[0], command[1:]...)
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return nil, err
@@ -61,6 +61,25 @@ func pandocProcess(content []byte) ([]byte, error) {
 		return nil, err
 	}
 	return bytes.TrimSpace(out), nil
+}
+
+func pandocProcess(content []byte) ([]byte, error) {
+	out, err := run([]string{
+		"pandoc", "-t", "html",
+	}, content)
+	if err != nil {
+		return nil, err
+	}
+	out = bytes.Replace(out, []byte("<em>"), []byte("☢"), -1)
+	out = bytes.Replace(out, []byte("</em>"), []byte("☢"), -1)
+	out, err = run([]string{
+		"pandoc", "-f", "html", "-t", "markdown", "--reference-links",
+	}, out)
+	if err != nil {
+		return nil, err
+	}
+	out = bytes.Replace(out, []byte("☢"), []byte("_"), -1)
+	return out, nil
 }
 
 func processFile(filename string, in io.ReadSeeker, out io.Writer, stdin bool) error {
