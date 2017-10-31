@@ -161,6 +161,7 @@ func main() {
 		}
 		prices = make(map[string]*result)
 		// iterate over all coin informations
+		var btc, bch float64
 		for _, info := range all {
 			coin := info.(map[string]interface{})
 			name := coin["name"].(string)
@@ -173,8 +174,15 @@ func main() {
 					fatal(err)
 				}
 				prices[name] = &result{symbol: coin["symbol"].(string), price: p}
+				if coin["symbol"] == "BTC" {
+					btc = p
+				}
+				if coin["symbol"] == "BCH" {
+					bch = p
+				}
 			}
 		}
+		fmt.Fprintf(os.Stderr, "BCH/BTC ratio: %.2f%%\n", bch*100.0/btc)
 	}
 	// output all prices
 	t := time.Now().Format("2006/01/02 15:04:05")
