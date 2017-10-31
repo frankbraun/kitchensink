@@ -27,12 +27,15 @@ var (
 	quandl = os.Getenv("QUANDL_API_KEY")
 	coins  = []string{
 		"Bitcoin",
+		"Bitcoin Cash",
 		"Decred",
 		"Ethereum",
 		"Ethereum Classic",
 		"Litecoin",
 		"Monero",
 		"Namecoin",
+		"PIVX",
+		"Verge",
 		"Zcash",
 	}
 )
