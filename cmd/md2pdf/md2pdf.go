@@ -86,8 +86,23 @@ func md2pdf(mdFile, pdfFile string, toc, hugo bool) error {
 	md = append(md, []byte("---\n\n")...)
 	if hugo {
 		base := filepath.Base(mdFile)
-		filename := strings.TrimSuffix(base, ".md") + ".pdf"
-		download := fmt.Sprintf("[download article as [PDF](/%s) or [markdown](/%s)]))\n\n", filename, base)
+		ymlmap, ok := yml.(map[string]interface{})
+		if ok {
+			/*
+				author, ok := ymlmap["author"].(string)
+				if ok && author != "" {
+					md = append(md, []byte(author+"\n\n")...)
+				}
+			*/
+			date, ok := ymlmap["date"].(string)
+			if ok && date != "" {
+				md = append(md, []byte(date+" ")...)
+			}
+		}
+		pdfFile := strings.TrimSuffix(base, ".md") + ".pdf"
+		txtFile := strings.TrimSuffix(base, ".md") + ".txt"
+		download := fmt.Sprintf("[read as [txt](/%s) or [PDF](/%s)]\n\n",
+			txtFile, pdfFile)
 		md = append(md, []byte(download)...)
 		md = append(md, []byte("<!--more-->\n")...)
 	}
