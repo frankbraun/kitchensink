@@ -201,8 +201,12 @@ func main() {
 	}
 	if all != nil {
 		for _, name := range coins {
-			fmt.Printf("P %s %s %11.6f EUR\n", t, prices[name].symbol,
-				prices[name].price)
+			price, ok := prices[name]
+			if ok {
+				fmt.Printf("P %s %s %11.6f EUR\n", t, price.symbol, price.price)
+			} else {
+				fmt.Fprintf(os.Stderr, "price for \"%s\" does not exist\n", name)
+			}
 		}
 	}
 }
