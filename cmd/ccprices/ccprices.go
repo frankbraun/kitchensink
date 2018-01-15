@@ -28,14 +28,10 @@ var (
 	coins  = []string{
 		"Bitcoin",
 		"Bitcoin Cash",
+		"Dash",
 		"Decred",
-		"Ethereum",
-		"Ethereum Classic",
 		"Litecoin",
 		"Monero",
-		"Namecoin",
-		"PIVX",
-		"Verge",
 		"Zcash",
 	}
 )
