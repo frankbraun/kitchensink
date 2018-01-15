@@ -8,16 +8,16 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
+	//"io"
 	"os"
-	"os/signal"
-	"syscall"
-
-	ptmx "github.com/frankbraun/pty"
-	"github.com/frankbraun/tcell"
-	"golang.org/x/crypto/ssh/terminal"
+	//"os/signal"
+	//"syscall"
+	//ptmx "github.com/frankbraun/pty"
+	//"github.com/frankbraun/tcell"
+	//"golang.org/x/crypto/ssh/terminal"
 )
 
+/*
 func drawBorder(s tcell.Screen) {
 	w, h := s.Size()
 	for x := 0; x < w; x++ {
@@ -96,6 +96,7 @@ func tcelltest(pty bool) error {
 		}
 	}
 }
+*/
 
 func fatal(err error) {
 	fmt.Fprintf(os.Stderr, "%s: error: %s\n", os.Args[0], err)
@@ -109,13 +110,17 @@ func usage() {
 }
 
 func main() {
-	pty := flag.Bool("pty", false,
-		"run tcell through pseudoterminal (pty) master/slave-layer ")
+	/*
+		pty := flag.Bool("pty", false,
+			"run tcell through pseudoterminal (pty) master/slave-layer ")
+	*/
 	flag.Parse()
 	if flag.NArg() != 0 {
 		usage()
 	}
-	if err := tcelltest(*pty); err != nil {
-		fatal(err)
-	}
+	/*
+		if err := tcelltest(*pty); err != nil {
+			fatal(err)
+		}
+	*/
 }
