@@ -21,9 +21,10 @@ import (
 
 var (
 	// Main operation modes.
-	list   = flag.Bool("l", false, "list files whose formatting differs from mdfmt's")
-	write  = flag.Bool("w", false, "write result to (source) file instead of stdout")
-	doDiff = flag.Bool("d", false, "display diffs instead of rewriting files")
+	list        = flag.Bool("l", false, "list files whose formatting differs from mdfmt's")
+	write       = flag.Bool("w", false, "write result to (source) file instead of stdout")
+	doDiff      = flag.Bool("d", false, "display diffs instead of rewriting files")
+	inlineLinks = flag.Bool("i", false, "use inline links, rather than reference-style links")
 
 	exitCode = 0
 )
@@ -72,9 +73,13 @@ func pandocProcess(content []byte) ([]byte, error) {
 	}
 	out = bytes.Replace(out, []byte("<em>"), []byte("☢"), -1)
 	out = bytes.Replace(out, []byte("</em>"), []byte("☢"), -1)
-	out, err = run([]string{
-		"pandoc", "-f", "html", "-t", "markdown", "--reference-links",
-	}, out)
+	args := []string{
+		"pandoc", "-f", "html", "-t", "markdown",
+	}
+	if !*inlineLinks {
+		args = append(args, "--reference-links")
+	}
+	out, err = run(args, out)
 	if err != nil {
 		return nil, err
 	}
