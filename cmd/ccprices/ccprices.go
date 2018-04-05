@@ -19,7 +19,7 @@ const (
 	euroAPI  = "http://api.fixer.io/latest"
 	xauAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?limit=1"
 	xagAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/SILVER.json?limit=1"
-	coinsAPI = "https://api.coinmarketcap.com/v1/ticker/?convert=EUR"
+	coinsAPI = "https://api.coinmarketcap.com/v1/ticker/?convert=EUR&limit=200"
 )
 
 var (
@@ -28,10 +28,13 @@ var (
 	coins  = []string{
 		"Bitcoin",
 		"Bitcoin Cash",
+		"Bitcoin Gold",
 		"Dash",
 		"Decred",
+		"Ethereum",
 		"Litecoin",
 		"Monero",
+		"Particl",
 		"Zcash",
 	}
 )
