@@ -2,19 +2,21 @@
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-// randpass prints a random 192-bit password in base64 encoding to stdout.
+// randpass prints a random password (128-bit, 192-bit, or 256-bit) in base64
+// encoding to stdout.
 package main
 
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"flag"
 	"fmt"
 	"io"
 	"os"
 )
 
-func randPass() (string, error) {
-	var pass [24]byte
+func randPass(size int) (string, error) {
+	pass := make([]byte, size)
 	if _, err := io.ReadFull(rand.Reader, pass[:]); err != nil {
 		return "", err
 	}
@@ -27,7 +29,17 @@ func fatal(err error) {
 }
 
 func main() {
-	pw, err := randPass()
+	low := flag.Bool("l", false, "use low security (128-bit)")
+	high := flag.Bool("h", false, "use high security (256-bit)")
+	flag.Parse()
+	size := 24 // 192-bit
+	if *low {
+		size = 16 // 128-bit
+	}
+	if *high {
+		size = 32 // 256-bit
+	}
+	pw, err := randPass(size)
 	if err != nil {
 		fatal(err)
 	}
