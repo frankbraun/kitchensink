@@ -3,4 +3,5 @@ all:
 
 .PHONY: test
 test:
-	go test github.com/frankbraun/kitchensink/...
+	go get github.com/frankbraun/gocheck
+	gocheck -g -c
