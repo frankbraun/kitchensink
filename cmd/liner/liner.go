@@ -1,7 +1,3 @@
-// Copyright (c) 2017 Frank Braun <frank@cryptogroup.net>
-// Use of this source code is governed by an ISC
-// license that can be found in the LICENSE file.
-
 // liner demoes command line editor with history.
 package main
 

@@ -1,7 +1,3 @@
-// Copyright (c) 2018 Frank Braun <frank@cryptogroup.net>
-// Use of this source code is governed by an ISC
-// license that can be found in the LICENSE file.
-
 // randpass prints a random password (128-bit, 192-bit, or 256-bit) in base64
 // encoding to stdout.
 package main
