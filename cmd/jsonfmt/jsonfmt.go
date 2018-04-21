@@ -32,10 +32,7 @@ func formatJSON(filename string) error {
 	if err := fp.Close(); err != nil {
 		return err
 	}
-	if err := os.Rename(fp.Name(), filename); err != nil {
-		return err
-	}
-	return nil
+	return os.Rename(fp.Name(), filename)
 }
 
 func fatal(err error) {
