@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	commonHtmlFlags = 0 |
+	commonHTMLFlags = 0 |
 		blackfriday.HTML_USE_XHTML |
 		blackfriday.HTML_USE_SMARTYPANTS |
 		blackfriday.HTML_SMARTYPANTS_FRACTIONS |
@@ -41,7 +41,7 @@ func (r markdownRenderer) Render(filename string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	flags := commonHtmlFlags
+	flags := commonHTMLFlags
 	if r.toc {
 		flags |= blackfriday.HTML_TOC
 	}
