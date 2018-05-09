@@ -1,3 +1,4 @@
+// btoa computes the ascii85 encoding of a binary file.
 package main
 
 import (
