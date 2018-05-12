@@ -4,8 +4,10 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/frankbraun/kitchensink/ascii/fivebit"
+	"github.com/frankbraun/kitchensink/ascii/huffman"
 	"github.com/frankbraun/kitchensink/ascii/sixbit"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
@@ -16,18 +18,41 @@ func testEncodings() error {
 	inputField := tview.NewInputField()
 	inputField.SetChangedFunc(func(text string) {
 		textView.Clear()
+		t := strings.ToUpper(text)
+		fmt.Fprintln(textView)
+		fmt.Fprintf(textView, "%s\n", t)
+		fmt.Fprintln(textView)
 		fmt.Fprintf(textView, "8-bit ASCII length in bytes: %d\n", len(text))
-		bytes, err := sixbit.EncodedLen(text)
+		bytes, err := sixbit.EncodedLen(t)
 		if err != nil {
 			fmt.Fprintf(textView, err.Error()+"\n")
 		} else {
 			fmt.Fprintf(textView, "6-bit ASCII length in bytes: %d\n", bytes)
 		}
-		bytes, err = fivebit.EncodedLen(text)
+		bytes, err = fivebit.EncodedLen(t)
 		if err != nil {
 			fmt.Fprintf(textView, err.Error()+"\n")
 		} else {
 			fmt.Fprintf(textView, "5-bit ASCII length in bytes: %d\n", bytes)
+		}
+		fmt.Fprintln(textView)
+		bytes, err = huffman.EncodedLen8Bit(t)
+		if err != nil {
+			fmt.Fprintf(textView, err.Error()+"\n")
+		} else {
+			fmt.Fprintf(textView, "8-bit Huffman encoding in bytes: %d\n", bytes)
+		}
+		bytes, err = huffman.EncodedLen6Bit(t)
+		if err != nil {
+			fmt.Fprintf(textView, err.Error()+"\n")
+		} else {
+			fmt.Fprintf(textView, "6-bit Huffman encoding in bytes: %d\n", bytes)
+		}
+		bytes, err = huffman.EncodedLen5Bit(t)
+		if err != nil {
+			fmt.Fprintf(textView, err.Error()+"\n")
+		} else {
+			fmt.Fprintf(textView, "5-bit Huffman encoding in bytes: %d\n", bytes)
 		}
 	})
 	inputField.SetDoneFunc(func(key tcell.Key) {
