@@ -25,7 +25,7 @@ func fatal(err error) {
 
 func usage() {
 	fmt.Fprintf(os.Stderr, "usage: %s rst_file\n", os.Args[0])
-	os.Exit(1)
+	os.Exit(2)
 }
 
 func main() {
