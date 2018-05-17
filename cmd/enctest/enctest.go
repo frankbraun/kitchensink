@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/frankbraun/kitchensink/ascii"
 	"github.com/frankbraun/kitchensink/ascii/fivebit"
 	"github.com/frankbraun/kitchensink/ascii/huffman"
 	"github.com/frankbraun/kitchensink/ascii/sixbit"
@@ -18,7 +19,7 @@ func testEncodings() error {
 	inputField := tview.NewInputField()
 	inputField.SetChangedFunc(func(text string) {
 		textView.Clear()
-		t := strings.ToUpper(text)
+		t := []byte(strings.ToUpper(text))
 		fmt.Fprintln(textView)
 		fmt.Fprintf(textView, "%s\n", t)
 		fmt.Fprintln(textView)
@@ -53,6 +54,22 @@ func testEncodings() error {
 			fmt.Fprintf(textView, err.Error()+"\n")
 		} else {
 			fmt.Fprintf(textView, "5-bit Huffman encoding in bytes: %d\n", bytes)
+		}
+		fmt.Fprintln(textView)
+		fmt.Fprintf(textView, "encoded text (in hex):\n")
+		enc, err := ascii.Encode(t)
+		if err != nil {
+			fmt.Fprintf(textView, err.Error()+"\n")
+		} else {
+			fmt.Fprintf(textView, "%x\n", enc)
+		}
+		fmt.Fprintln(textView)
+		fmt.Fprintf(textView, "decoded text:\n")
+		dec, err := ascii.Decode(enc)
+		if err != nil {
+			fmt.Fprintf(textView, err.Error()+"\n")
+		} else {
+			fmt.Fprintf(textView, "%s\n", dec)
 		}
 	})
 	inputField.SetDoneFunc(func(key tcell.Key) {

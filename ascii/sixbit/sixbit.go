@@ -6,9 +6,9 @@ import (
 )
 
 // EncodedLen returns the encoded length (in bytes) of text in 6-bit ASCII.
-func EncodedLen(text string) (int, error) {
+func EncodedLen(text []byte) (int, error) {
 	var chars int
-	for _, c := range []byte(text) {
+	for _, c := range text {
 		if 32 <= c && c <= 95 {
 			chars++
 		} else {
@@ -23,9 +23,9 @@ func EncodedLen(text string) (int, error) {
 }
 
 // Encode text in 6-bit ASCII (one byte per character).
-func Encode(text string) ([]byte, error) {
+func Encode(text []byte) ([]byte, error) {
 	buf := make([]byte, len(text))
-	for i, c := range []byte(text) {
+	for i, c := range text {
 		if 32 <= c && c <= 95 {
 			buf[i] = c - 32
 		} else {
@@ -33,4 +33,14 @@ func Encode(text string) ([]byte, error) {
 		}
 	}
 	return buf, nil
+}
+
+// DecodeChar decodes a single 6-bit encode character.
+func DecodeChar(c byte) (byte, error) {
+	switch {
+	case c < 64:
+		return c + 32, nil
+	default:
+		return 0, fmt.Errorf("sixbit: %d is not a 6-bit character", c)
+	}
 }
