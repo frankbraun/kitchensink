@@ -26,8 +26,10 @@ func EncodedLen(text []byte) (int, error) {
 func Encode(text []byte) ([]byte, error) {
 	buf := make([]byte, len(text))
 	for i, c := range text {
-		if 32 <= c && c <= 95 {
-			buf[i] = c - 32
+		if 32 <= c && c < 64 {
+			buf[i] = c
+		} else if 64 <= c && c <= 95 {
+			buf[i] = c - 64
 		} else {
 			return nil, fmt.Errorf("sixbit: cannot encode '%c' as 6-bit ASCII", c)
 		}
@@ -38,8 +40,10 @@ func Encode(text []byte) ([]byte, error) {
 // DecodeChar decodes a single 6-bit encode character.
 func DecodeChar(c byte) (byte, error) {
 	switch {
+	case c < 32:
+		return c + 64, nil
 	case c < 64:
-		return c + 32, nil
+		return c, nil
 	default:
 		return 0, fmt.Errorf("sixbit: %d is not a 6-bit character", c)
 	}
