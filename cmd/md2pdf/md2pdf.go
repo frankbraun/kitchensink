@@ -86,18 +86,9 @@ func md2pdf(mdFile, pdfFile string, toc, hugo bool) error {
 	md = append(md, []byte("---\n\n")...)
 	if hugo {
 		base := filepath.Base(mdFile)
-		ymlmap, ok := yml.(map[string]interface{})
-		if ok {
-			/*
-				author, ok := ymlmap["author"].(string)
-				if ok && author != "" {
-					md = append(md, []byte(author+"\n\n")...)
-				}
-			*/
-			date, ok := ymlmap["date"].(string)
-			if ok && date != "" {
-				md = append(md, []byte(date+" ")...)
-			}
+		date, ok := yml["date"].(string)
+		if ok && date != "" {
+			md = append(md, []byte(date+" ")...)
 		}
 		pdfFile := strings.TrimSuffix(base, ".md") + ".pdf"
 		txtFile := strings.TrimSuffix(base, ".md") + ".txt"
