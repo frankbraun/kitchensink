@@ -31,6 +31,7 @@ var (
 		"Litecoin",
 		"Monero",
 		"Particl",
+		"Tezos",
 		"Zcash",
 	}
 )
