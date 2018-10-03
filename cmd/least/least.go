@@ -1,3 +1,4 @@
+// least is proof-of-concept implementation of 'less' with the tcell package.
 package main
 
 import (

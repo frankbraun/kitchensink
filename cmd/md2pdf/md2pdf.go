@@ -1,3 +1,4 @@
+// md2pdf converts Markdown content containing frontmatter into PDFs.
 package main
 
 import (
