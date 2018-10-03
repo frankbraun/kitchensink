@@ -22,8 +22,8 @@ import (
 //
 // 2. Generate 32-byte SALT (for Argon2id) and 24-byte NONCE (for secretbox).
 //
-// 3. Derive KEY (for secretbox) from passphrase with Argon2id using SALT
-// (with time=1 and memory=64MB).
+// 3. Derive 32-byte KEY (for secretbox) from passphrase with Argon2id using
+// SALT (with time=1, memory=64MB, and threads=4).
 //
 // 4. Encrypt MSG to ENC with NaCL's secretbox.Seal using NONCE and KEY.
 //
@@ -69,8 +69,8 @@ func Seal(plainFile, cryptFile string) error {
 // 2. Split BUF into SALT|NONCE|ENC, where SALT is 32-byte, NONCE is 24-byte,
 // and ENC is the remainder.
 //
-// 3. Derive KEY (for secretbox) from passphrase with Argon2id using SALT
-// (with time=1 and memory=64MB).
+// 3. Derive 32-byte KEY (for secretbox) from passphrase with Argon2id using
+// SALT (with time=1, memory=64MB, and threads=4).
 //
 // 4. Decrypt ENC to MSG with NaCL's secretbox.Open using NONCE and KEY.
 //
