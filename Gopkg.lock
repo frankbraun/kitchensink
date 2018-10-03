@@ -58,6 +58,16 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/frankbraun/codechain"
+  packages = [
+    "util/bzero",
+    "util/file",
+    "util/terminal"
+  ]
+  revision = "874744930a101b56d8908d169d8af4f558368c71"
+
+[[projects]]
+  branch = "master"
   name = "github.com/frankbraun/huffman"
   packages = ["hufio"]
   revision = "00ccac022fac2721e1695ad883112176682fc983"
@@ -222,7 +232,14 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["ssh/terminal"]
+  packages = [
+    "argon2",
+    "blake2b",
+    "nacl/secretbox",
+    "poly1305",
+    "salsa20/salsa",
+    "ssh/terminal"
+  ]
   revision = "df8d4716b3472e4a531c33cedbe537dae921a1a9"
 
 [[projects]]
@@ -235,6 +252,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = [
+    "cpu",
     "unix",
     "windows"
   ]
@@ -279,6 +297,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "1a368dde58dae79ccdc90a2d8eb5e24c22d26d3354979b1c5ccf70410f5c1819"
+  inputs-digest = "409780dd582c21dd8f43793da85082b31f2e65820a72c6199493b8aec984826f"
   solver-name = "gps-cdcl"
   solver-version = 1
