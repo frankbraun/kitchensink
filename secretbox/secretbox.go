@@ -15,6 +15,9 @@ import (
 	"golang.org/x/crypto/nacl/secretbox"
 )
 
+// testPass sets the passphrase for testing.
+var testPass string
+
 // Seal encrypts the file plainFile with a passphrase read from stdin and
 // stores the result in cryptFile (which must not exist):
 //
@@ -36,9 +39,14 @@ func Seal(plainFile, cryptFile string) error {
 	if exists {
 		return fmt.Errorf("file '%s' exists already", cryptFile)
 	}
-	passphrase, err := terminal.ReadPassphrase(syscall.Stdin, true)
-	if err != nil {
-		return err
+	var passphrase []byte
+	if testPass == "" {
+		passphrase, err = terminal.ReadPassphrase(syscall.Stdin, true)
+		if err != nil {
+			return err
+		}
+	} else {
+		passphrase = []byte(testPass)
 	}
 	msg, err := ioutil.ReadFile(plainFile)
 	if err != nil {
@@ -83,9 +91,14 @@ func Open(cryptFile, plainFile string) error {
 	if exists {
 		return fmt.Errorf("file '%s' exists already", plainFile)
 	}
-	passphrase, err := terminal.ReadPassphrase(syscall.Stdin, false)
-	if err != nil {
-		return err
+	var passphrase []byte
+	if testPass == "" {
+		passphrase, err = terminal.ReadPassphrase(syscall.Stdin, false)
+		if err != nil {
+			return err
+		}
+	} else {
+		passphrase = []byte(testPass)
 	}
 	enc, err := ioutil.ReadFile(cryptFile)
 	if err != nil {
