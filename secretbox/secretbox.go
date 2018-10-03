@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"math"
+	"runtime"
 	"syscall"
 
 	"github.com/frankbraun/codechain/util/file"
@@ -14,6 +16,18 @@ import (
 	"golang.org/x/crypto/argon2"
 	"golang.org/x/crypto/nacl/secretbox"
 )
+
+// maxThreads returns the maximum number of usable threads as uint8.
+func maxThreads() uint8 {
+	var threads uint8
+	numCPU := runtime.NumCPU()
+	if numCPU > math.MaxUint8 {
+		threads = math.MaxUint8
+	} else {
+		threads = uint8(numCPU)
+	}
+	return threads
+}
 
 // Seal encrypts the file plainFile with a passphrase read from stdin and
 // stores the result in cryptFile (which must not exist).
@@ -44,7 +58,7 @@ func Seal(plainFile, cryptFile string) error {
 	if _, err := io.ReadFull(rand.Reader, nonce[:]); err != nil {
 		return err
 	}
-	derivedKey := argon2.IDKey(passphrase, salt[:], 1, 64*1024, 4, 32)
+	derivedKey := argon2.IDKey(passphrase, salt[:], 1, 64*1024, maxThreads(), 32)
 	copy(key[:], derivedKey)
 	enc := secretbox.Seal(append(salt[:], nonce[:]...), msg, &nonce, &key)
 	return ioutil.WriteFile(cryptFile, enc, 0644)
@@ -75,7 +89,7 @@ func Open(cryptFile, plainFile string) error {
 	)
 	copy(salt[:], enc[:32])
 	copy(nonce[:], enc[32:56])
-	derivedKey := argon2.IDKey(passphrase, salt[:], 1, 64*1024, 4, 32)
+	derivedKey := argon2.IDKey(passphrase, salt[:], 1, 64*1024, maxThreads(), 32)
 	copy(key[:], derivedKey)
 	msg, verify := secretbox.Open(nil, enc[56:], &nonce, &key)
 	if !verify {
