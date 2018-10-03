@@ -30,7 +30,18 @@ func maxThreads() uint8 {
 }
 
 // Seal encrypts the file plainFile with a passphrase read from stdin and
-// stores the result in cryptFile (which must not exist).
+// stores the result in cryptFile (which must not exist):
+//
+// 1. Load plainFile as MSG.
+//
+// 2. Generate 32-byte SALT (for Argon2id) and 24-byte NONCE (for secretbox).
+//
+// 3. Derive KEY (for secretbox) from passphrase with Argon2id using SALT
+// (with time=1 and memory=64MB).
+//
+// 4. Encrypt MSG to ENC with NaCL's secretbox.Seal using NONCE and KEY.
+//
+// 5. Save SALT|NONCE|ENC to cryptFile.
 func Seal(plainFile, cryptFile string) error {
 	exists, err := file.Exists(cryptFile)
 	if err != nil {
@@ -65,7 +76,19 @@ func Seal(plainFile, cryptFile string) error {
 }
 
 // Open decrypts the file cryptFile with a passphrase read from stdin and
-// stores the result in plainFile (which must not exist).
+// stores the result in plainFile (which must not exist):
+//
+// 1. Load cryptFile as BUF.
+//
+// 2. Split BUF into SALT|NONCE|ENC, where SALT is 32-byte, NONCE is 24-byte,
+// and ENC is the remainder.
+//
+// 3. Derive KEY (for secretbox) from passphrase with Argon2id using SALT
+// (with time=1 and memory=64MB).
+//
+// 4. Decrypt ENC to MSG with NaCL's secretbox.Open using NONCE and KEY.
+//
+// 5. Save MSG to plainFile.
 func Open(cryptFile, plainFile string) error {
 	exists, err := file.Exists(plainFile)
 	if err != nil {
