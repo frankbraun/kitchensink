@@ -19,6 +19,12 @@
   revision = "de5bf2ad457846296e2031421a34e2568e304e35"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/ajstarks/svgo"
+  packages = ["."]
+  revision = "6ce6a3bcf6cde6c5007887677ebd148ec30f42a4"
+
+[[projects]]
   name = "github.com/alecthomas/chroma"
   packages = [
     ".",
@@ -297,6 +303,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "409780dd582c21dd8f43793da85082b31f2e65820a72c6199493b8aec984826f"
+  inputs-digest = "65d2046110d7f6b11dbb2b2dd44b3cc3bf237aca5aaf95601a4295bdbcf43d75"
   solver-name = "gps-cdcl"
   solver-version = 1
