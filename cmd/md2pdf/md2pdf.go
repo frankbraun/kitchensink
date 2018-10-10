@@ -93,7 +93,7 @@ func md2pdf(mdFile, pdfFile string, toc, hugo bool) error {
 		}
 		pdfFile := strings.TrimSuffix(base, ".md") + ".pdf"
 		txtFile := strings.TrimSuffix(base, ".md") + ".txt"
-		download := fmt.Sprintf("[read as [txt](/%s) or [PDF](/%s)]\n\n",
+		download := fmt.Sprintf("[read as [txt](/essay/%s) or [PDF](/essay/%s)]\n\n",
 			txtFile, pdfFile)
 		md = append(md, []byte(download)...)
 		md = append(md, []byte("<!--more-->\n")...)
