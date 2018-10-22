@@ -12,13 +12,15 @@ import (
 )
 
 const (
-	euroAPI  = "http://api.fixer.io/latest"
+	euroAPI  = "http://data.fixer.io/api/latest"
 	xauAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?limit=1"
 	xagAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/SILVER.json?limit=1"
 	coinsAPI = "https://api.coinmarketcap.com/v1/ticker/?convert=EUR&limit=200"
 )
 
 var (
+	// Fixer API key can be set via environment variable FIXER_API_KEY
+	fixer = os.Getenv("FIXER_API_KEY")
 	// Quandl API key can be set via environment variable QUANDL_API_KEY
 	quandl = os.Getenv("QUANDL_API_KEY")
 	coins  = []string{
@@ -58,8 +60,11 @@ func httpGetWithWarning(url string) ([]byte, error) {
 	return b, err
 }
 
-func getEuroExchangeRates() (map[string]interface{}, error) {
-	b, err := httpGetWithWarning(euroAPI)
+func getEuroExchangeRates(api string) (map[string]interface{}, error) {
+	if fixer != "" {
+		api += "?access_key=" + fixer
+	}
+	b, err := httpGetWithWarning(api)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +131,7 @@ func fatal(err error) {
 
 func main() {
 	// get euro exchange rates
-	rates, err := getEuroExchangeRates()
+	rates, err := getEuroExchangeRates(euroAPI)
 	if err != nil {
 		fatal(err)
 	}
