@@ -80,7 +80,7 @@ func getEuroExchangeRates(api string) (map[string]interface{}, error) {
 
 func getLBMAPrice(api string, dataIndex int) (float64, error) {
 	if quandl != "" {
-		api += "?api_key=" + quandl
+		api += "&api_key=" + quandl
 	}
 	b, err := httpGetWithWarning(api)
 	if err != nil {
