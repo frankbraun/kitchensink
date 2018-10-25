@@ -1,7 +1,7 @@
-# SVGo: A Go library for SVG generation #
+#SVGo: A Go library for SVG generation#
 
 The library generates SVG as defined by the Scalable Vector Graphics 1.1 Specification (<http://www.w3.org/TR/SVG11/>). 
-Output goes to the specified io.Writer.
+Output goes to the specified io.Writer, operation occur with Go's float64 type.
 
 ## Supported SVG elements and functions ##
 
@@ -39,13 +39,12 @@ See svgdef.[svg|png|pdf] for a graphical view of the function calls
 
 Usage: (assuming GOPATH is set)
 
-	go get github.com/ajstarks/svgo
-	go install github.com/ajstarks/svgo/...
+	go get github.com/ajstarks/svgo/float
 	
 	
 You can use godoc to browse the documentation from the command line:
 
-	$ go doc github.com/ajstarks/svgo
+	$ go doc github.com/ajstarks/svgo/float
 	
 
 a minimal program, to generate SVG to standard output.
@@ -53,13 +52,13 @@ a minimal program, to generate SVG to standard output.
 	package main
 	
 	import (
-		"github.com/ajstarks/svgo"
+		"github.com/ajstarks/svgo/float"
 		"os"
 	)
 	
 	func main() {
-		width := 500
-		height := 500
+		width := 500.0
+		height := 500.0
 		canvas := svg.New(os.Stdout)
 		canvas.Start(width, height)
 		canvas.Circle(width/2, height/2, 100)
@@ -73,7 +72,7 @@ Drawing in a web server: (http://localhost:2003/circle)
 	
 	import (
 		"log"
-		"github.com/ajstarks/svgo"
+		"github.com/ajstarks/svgo/float"
 		"net/http"
 	)
 	
@@ -101,7 +100,7 @@ Combined with the svgplay command, SVGo can be used to "sketch" with code in a b
 
 To use svgplay and SVGo, first go to a directory with your code, and run:
 
-	$ svgplay
+	$ svgplay -f # use the floating point version
 	2014/06/25 22:05:28 ☠ ☠ ☠ Warning: this server allows a client connecting to 127.0.0.1:1999 to execute code on this computer ☠ ☠ ☠	
 	
 Next open your browser to the svgplay server you just started.
@@ -128,51 +127,8 @@ If you want to sketch with an existing file, enter its URL:
 
 * SVGo Workshop <https://speakerdeck.com/u/ajstarks/p/svgo-workshop>
 
+* The Other Side of Go: Programming Pictures <https://www.youtube.com/watch?v=nuDO1oQxARs>
 
-### Tutorial Video ###
-
-A video describing how to use the package can be seen on YouTube at <http://www.youtube.com/watch?v=ze6O2Dj5gQ4>
-
-## Package contents ##
-
-* svg.go:		Library
-* newsvg:		Coding template command
-* svgdef:	Creates a SVG representation of the API
-* android:	The Android logo
-* bubtrail: Bubble trails
-* bulletgraph:	Bullet Graphs (via Stephen Few)
-* colortab: Display SVG named colors with RGB values
-* compx:  Component diagrams
-* flower:	Random "flowers"
-* fontcompare:	Compare two fonts
-* f50:		Get 50 photos from Flickr based on a query
-* fe:	Filter effects
-* funnel:	Funnel from transparent circles
-* gradient:	Linear and radial gradients
-* html5logo:	HTML5 logo with draggable elements
-* imfade:	Show image fading
-* lewitt:	Version of Sol Lewitt's Wall Drawing 91
-* ltr:		Layer Tennis Remixes
-* marker: Test markers
-* paths:		Demonstrate SVG paths
-* pattern:	Test patterns
-* planets:	Show the scale of the Solar system
-* pmap:		Proportion maps
-* randcomp:	Compare random number generators
-* richter:	Gerhard Richter's 256 colors
-* rl:			Random lines (port of a Processing demo)
-* skewabc:		Skew ABC
-* stockproduct:	Visualize product and stock prices
-* svgopher:	SVGo Mascot
-* svgplay: SVGo sketching server
-* svgplot:		Plot data
-* svgrid:	Compose SVG files in a grid
-* tsg:  Twitter Search Grid
-* tumblrgrid:	Tumblr picture grid
-* turbulence:	Turbulence filter effect
-* vismem:	Visualize data from files
-* webfonts:	"Hello, World" with Google Web Fonts
-* websvg:	Generate SVG as a web server
 
 
 ## Functions and types ##
@@ -186,9 +142,11 @@ The SVG type:
 
 	type SVG struct {
         Writer   io.Writer
+        Decimals int
 	}
 
-Most operations are methods on this type, specifying the destination io.Writer.
+Most operations are methods on this type, specifying the destination io.Writer and decimal precision.
+		
 
 The Offcolor type:
 
@@ -214,30 +172,30 @@ is used to specify inputs and results for filter effects
 ### Structure, Scripting, Metadata, Transformation and Links ###
 
 	New(w io.Writer) *SVG
-  Constructor, Specify the output destination.
+  Constructor, Specify the output destination, and the number of digits after the decimal point (default 2)
   
-	Start(w int, h int, attributes ...string)
+	Start(w float64, h float64, attributes ...string)
   begin the SVG document with the width w and height h. Optionally add additional elements
   (such as additional namespaces or scripting events)
   <http://www.w3.org/TR/SVG11/struct.html#SVGElement>
   
-	Startview(w, h, minx, miny, vw, vh int)
+	Startview(w, h, minx, miny, vw, vh float64)
   begin the SVG document with the width w, height h, with a viewBox at minx, miny, vw, vh.
   <http://www.w3.org/TR/SVG11/struct.html#SVGElement>
   
-	Startunit(w int, h int, unit string, ns ...string)
+	Startunit(w float64, h float64, unit string, ns ...string)
   begin the SVG document, with width and height in the specified units. Optionally add additional elements
   (such as additional namespaces or scripting events)
   <http://www.w3.org/TR/SVG11/struct.html#SVGElement>
 
   
-	Startpercent(w int, h int, ns ...string)
+	Startpercent(w float64, h float64, ns ...string)
   begin the SVG document, with width and height in percent. Optionally add additional elements
   (such as additional namespaces or scripting events)
   <http://www.w3.org/TR/SVG11/struct.html#SVGElement>
 
   
-	StartviewUnit(w, h int, unit string, minx, miny, vw, vh int)
+	StartviewUnit(w, h float64, unit string, minx, miny, vw, vh float64)
    begin the SVG document with the width w, height h, in the specified unit, with a viewBox at minx, miny, vw, vh.
   <http://www.w3.org/TR/SVG11/struct.html#SVGElement>
 
@@ -273,7 +231,7 @@ is used to specify inputs and results for filter effects
   begin a group, with the specified transform, end with Gend().
   <http://www.w3.org/TR/SVG11/coords.html#TransformAttribute>
 
-	Translate(x, y int)
+	Translate(x, y float64)
   begins coordinate translation to (x,y), end with Gend().
   <http://www.w3.org/TR/SVG11/coords.html#TransformAttribute>
 
@@ -301,10 +259,10 @@ is used to specify inputs and results for filter effects
   rotates the coordinate system by r degrees, end with Gend().
   <http://www.w3.org/TR/SVG11/coords.html#TransformAttribute>
 
-	TranslateRotate(x, y int, r float64)
+	TranslateRotate(x, y float64, r float64)
    translates the coordinate system to (x,y), then rotates to r degrees, end with Gend().
 	
-	RotateTranslate(x, y int, r float64)
+	RotateTranslate(x, y float64, r float64)
    rotates the coordinate system r degrees, then translates to (x,y), end with Gend().
 
 	Gend()
@@ -325,7 +283,7 @@ is used to specify inputs and results for filter effects
 	DefEnd()
   end a definition block.
 
-	Marker(id string, x, y, w, h int, s ...string)
+	Marker(id string, x, y, w, h float64, s ...string)
   define a marker
   <http://www.w3.org/TR/SVG11/painting.html#MarkerElement>
 
@@ -334,7 +292,7 @@ is used to specify inputs and results for filter effects
   end a marker
   
   
-	Mask(id string, x int, y int, w int, h int, s ...string)
+	Mask(id string, x float64, y float64, w float64, h float64, s ...string)
   creates a mask with a specified id, dimension, and optional style.
   <http://www.w3.org/TR/SVG/masking.html>
   
@@ -342,7 +300,7 @@ is used to specify inputs and results for filter effects
   ends the Mask element.
 
 
-	Pattern(id string, x, y, width, height int, putype string, s ...string)
+	Pattern(id string, x, y, width, height float64, putype string, s ...string)
  define a Pattern with the specified dimensions, the putype can be either "user" or "obj", which sets the patternUnits
  attribute to be either userSpaceOnUse or objectBoundingBox.
  <http://www.w3.org/TR/SVG11/pservers.html#Patterns>
@@ -362,19 +320,19 @@ is used to specify inputs and results for filter effects
 	LinkEnd()
   end the link.
 
-	Use(x int, y int, link string, s ...string)
+	Use(x float64, y float64, link string, s ...string)
   place the object referenced at link at the location x, y.
   <http://www.w3.org/TR/SVG11/struct.html#UseElement>
 
 ### Shapes ###
 
-	Circle(x int, y int, r int, s ...string)
+	Circle(x float64, y float64, r float64, s ...string)
   draw a circle, centered at x,y with radius r.
   <http://www.w3.org/TR/SVG11/shapes.html#CircleElement>
   
   ![Circle](http://farm5.static.flickr.com/4144/5187953823_01a1741489_m.jpg)
   
-	Ellipse(x int, y int, w int, h int, s ...string)
+	Ellipse(x float64, y float64, w float64, h float64, s ...string)
   draw an ellipse, centered at x,y with radii w, and h.
   <http://www.w3.org/TR/SVG11/shapes.html#EllipseElement>
   
@@ -386,23 +344,23 @@ is used to specify inputs and results for filter effects
   
   ![Polygon](http://farm2.static.flickr.com/1006/5187953873_337dc26597_m.jpg)
  
-	Rect(x int, y int, w int, h int, s ...string)
+	Rect(x float64, y float64, w float64, h float64, s ...string)
   draw a rectangle with upper left-hand corner at x,y, with width w, and height h.
   <http://www.w3.org/TR/SVG11/shapes.html#RectElement>
   
   ![Rect](http://farm2.static.flickr.com/1233/5188556032_86c90e354b_m.jpg)
   
-	CenterRect(x int, y int, w int, h int, s ...string)
+	CenterRect(x float64, y float64, w float64, h float64, s ...string)
  draw a rectangle with its center at x,y, with width w, and height h.
 
-	Roundrect(x int, y int, w int, h int, rx int, ry int, s ...string)
+	Roundrect(x float64, y float64, w float64, h float64, rx float64, ry float64, s ...string)
   draw a rounded rectangle with upper the left-hand corner at x,y, 
   with width w, and height h. The radii for the rounded portion 
   is specified by rx (width), and ry (height).
   
   ![Roundrect](http://farm2.static.flickr.com/1275/5188556120_e2a9998fee_m.jpg)
   
-	Square(x int, y int, s int, style ...string)
+	Square(x float64, y float64, s float64, style ...string)
   draw a square with upper left corner at x,y with sides of length s.
   
   ![Square](http://farm5.static.flickr.com/4110/5187953659_54dcce242e_m.jpg)
@@ -413,7 +371,7 @@ is used to specify inputs and results for filter effects
  draw the arbitrary path as specified in p, according to the style specified in s. <http://www.w3.org/TR/SVG11/paths.html>
 
  
-	Arc(sx int, sy int, ax int, ay int, r int, large bool, sweep bool, ex int, ey int, s ...string)
+	Arc(sx float64, sy float64, ax float64, ay float64, r float64, large bool, sweep bool, ex float64, ey float64, s ...string)
   draw an elliptical arc beginning coordinate at sx,sy, ending coordinate at ex, ey
   width and height of the arc are specified by ax, ay, the x axis rotation is r
   
@@ -428,7 +386,7 @@ is used to specify inputs and results for filter effects
 
 
  
-	Bezier(sx int, sy int, cx int, cy int, px int, py int, ex int, ey int, s ...string)
+	Bezier(sx float64, sy float64, cx float64, cy float64, px float64, py float64, ex float64, ey float64, s ...string)
   draw a cubic bezier curve, beginning at sx,sy, ending at ex,ey
   with control points at cx,cy and px,py.
   <http://www.w3.org/TR/SVG11/paths.html#PathDataCubicBezierCommands>
@@ -437,7 +395,7 @@ is used to specify inputs and results for filter effects
 
 
  
-	Qbezier(sx int, sy int, cx int, cy int, ex int, ey int, tx int, ty int, s ...string)
+	Qbezier(sx float64, sy float64, cx float64, cy float64, ex float64, ey float64, tx float64, ty float64, s ...string)
   draw a quadratic bezier curve, beginning at sx, sy, ending at tx,ty
   with control points are at cx,cy, ex,ey.
   <http://www.w3.org/TR/SVG11/paths.html#PathDataQuadraticBezierCommands>
@@ -445,7 +403,7 @@ is used to specify inputs and results for filter effects
    ![Qbezier](http://farm2.static.flickr.com/1018/5187953917_9a43cf64fb.jpg)
   
  
-	Qbez(sx int, sy int, cx int, cy int, ex int, ey int, s...string)
+	Qbez(sx float64, sy float64, cx float64, cy float64, ex float64, ey float64, s...string)
    draws a quadratic bezier curver, with optional style beginning at sx,sy, ending at ex, sy
    with the control point at cx, cy.
    <http://www.w3.org/TR/SVG11/paths.html#PathDataQuadraticBezierCommands>
@@ -454,7 +412,7 @@ is used to specify inputs and results for filter effects
 
 ### Lines ###
 
-	Line(x1 int, y1 int, x2 int, y2 int, s ...string)
+	Line(x1 float64, y1 float64, x2 float64, y2 float64, s ...string)
   draw a line segment between x1,y1 and x2,y2.
   <http://www.w3.org/TR/SVG11/shapes.html#LineElement>
  
@@ -469,17 +427,17 @@ is used to specify inputs and results for filter effects
 
 ### Image and Text ###
 
-	Image(x int, y int, w int, h int, link string, s ...string)
+	Image(x float64, y float64, w float64, h float64, link string, s ...string)
   place at x,y (upper left hand corner), the image with width w, and height h, referenced at link.
   <http://www.w3.org/TR/SVG11/struct.html#ImageElement>
  
  ![Image](http://farm5.static.flickr.com/4058/5188556346_e5ce3dcbc2_m.jpg)
 
-	Text(x int, y int, t string, s ...string)
+	Text(x float64, y float64, t string, s ...string)
   Place the specified text, t at x,y according to the style specified in s.
   <http://www.w3.org/TR/SVG11/text.html#TextElement>
   
-	Textlines(x, y int, s []string, size, spacing int, fill, align string)
+	Textlines(x, y float64, s []string, size, spacing float64, fill, align string)
  Places lines of text in s, starting at x,y, at the specified size, fill, and alignment, and spacing.
     
 	Textpath(t string, pathid string, s ...string)
@@ -489,12 +447,12 @@ is used to specify inputs and results for filter effects
   
 ### Color ###
 
-	RGB(r int, g int, b int) string
+	RGB(r float64, g float64, b float64) string
   creates a style string for the fill color designated 
   by the (r)ed, g(reen), (b)lue components.
   <http://www.w3.org/TR/css3-color/>
   
-	RGBA(r int, g int, b int, a float64) string
+	RGBA(r float64, g float64, b float64, a float64) string
   as above, but includes the color's opacity as a value
   between 0.0 (fully transparent) and 1.0 (opaque).
   
@@ -554,13 +512,13 @@ Standard reference: <http://www.w3.org/TR/SVG11/filters.html#feComponentTransfer
  	FeCompEnd()
 FeCompEnd ends a feComponent filter Element>
  
- 	FeComposite(fs Filterspec, operator string, k1, k2, k3, k4 int, s ...string)
+ 	FeComposite(fs Filterspec, operator string, k1, k2, k3, k4 float64, s ...string)
 FeComposite specifies a feComposite filter primitive
 Standard reference: <http://www.w3.org/TR/SVG11/filters.html#feCompositeElement>
 
  	FeConvolveMatrix(fs Filterspec, matrix [9]int, s ...string)
 FeConvolveMatrix specifies a feConvolveMatrix filter primitive
-Standard reference: <http://www.w3.org/TR/SVG11/filters.html#feConvolveMatrixElement>
+Standard referencd: <http://www.w3.org/TR/SVG11/filters.html#feConvolveMatrixElement>
 
 
 	 FeDiffuseLighting(fs Filterspec, scale, constant float64, s ...string) 
@@ -616,7 +574,7 @@ Standard reference: <http://www.w3.org/TR/SVG11/filters.html#feMergeElement>
 FeMorphologyLight specifies a feMorphologyLight filter primitive
 Standard reference: <http://www.w3.org/TR/SVG11/filters.html#feMorphologyElement>
 
-	 FeOffset(fs Filterspec, dx, dy int, s ...string)
+	 FeOffset(fs Filterspec, dx, dy float64, s ...string)
 FeOffset specifies the feOffset filter primitive
 Standard reference: <http://www.w3.org/TR/SVG11/filters.html#feOffsetElement>
 
@@ -624,7 +582,7 @@ Standard reference: <http://www.w3.org/TR/SVG11/filters.html#feOffsetElement>
 FePointLight specifies a fePpointLight filter primitive
 Standard reference: <http://www.w3.org/TR/SVG11/filters.html#fePointLightElement>
 
-	 FeSpecularLighting(fs Filterspec, scale, constant float64, exponent int, color string, s ...string)
+	 FeSpecularLighting(fs Filterspec, scale, constant float64, exponent float64, color string, s ...string)
 FeSpecularLighting specifies a specular lighting filter primitive, 
 a container for light source elements, end with SpecularEnd()
 
@@ -643,7 +601,7 @@ FeTile specifies the tile utility filter primitive
 Standard reference: <http://www.w3.org/TR/SVG11/filters.html#feTileElement>
 
 
-	 FeTurbulence(fs Filterspec, ftype string, bfx, bfy float64, octaves int, seed int64, stitch bool, s ...string)
+	 FeTurbulence(fs Filterspec, ftype string, bfx, bfy float64, octaves float64, seed int64, stitch bool, s ...string)
 FeTurbulence specifies a turbulence filter primitive
 Standard reference: <http://www.w3.org/TR/SVG11/filters.html#feTurbulenceElement>
 
@@ -673,7 +631,7 @@ Apply sepia tone
 
 ### Utility ###
 
-	Grid(x int, y int, w int, h int, n int, s ...string)
+	Grid(x float64, y float64, w float64, h float64, n float64, s ...string)
   draws a grid of straight lines starting at x,y, with a width w, and height h, and a size of n.
   
   ![Grid](http://farm5.static.flickr.com/4133/5190957924_7a31d0db34.jpg)

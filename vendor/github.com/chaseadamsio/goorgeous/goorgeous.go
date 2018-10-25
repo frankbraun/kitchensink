@@ -189,9 +189,7 @@ func OrgOptions(input []byte, renderer blackfriday.Renderer) []byte {
 					tmpBlock.Write(tmpBuf.Bytes())
 
 				} else {
-					if !(tmpBlock.Len() == 0 && (marker == "SRC" || marker == "EXAMPLE")) {
-						tmpBlock.WriteByte('\n')
-					}
+					tmpBlock.WriteByte('\n')
 					tmpBlock.Write(data)
 				}
 
@@ -525,7 +523,7 @@ func isPropertyDrawer(data []byte) bool {
 }
 
 // ~~ Dynamic Blocks
-var reBlock = regexp.MustCompile(`^\s*#\+(BEGIN|END)_(\w+)\s*([0-9A-Za-z_\-]*)?`)
+var reBlock = regexp.MustCompile(`^#\+(BEGIN|END)_(\w+)\s*([0-9A-Za-z_\-]*)?`)
 
 func isBlock(data []byte) bool {
 	return reBlock.Match(data)
