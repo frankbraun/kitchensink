@@ -2,33 +2,14 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
 
 	"github.com/frankbraun/kitchensink/markup"
-	"github.com/russross/blackfriday"
-)
-
-const (
-	commonHTMLFlags = 0 |
-		blackfriday.HTML_USE_XHTML |
-		blackfriday.HTML_USE_SMARTYPANTS |
-		blackfriday.HTML_SMARTYPANTS_FRACTIONS |
-		blackfriday.HTML_SMARTYPANTS_DASHES |
-		blackfriday.HTML_SMARTYPANTS_LATEX_DASHES
-
-	commonExtensions = 0 |
-		blackfriday.EXTENSION_NO_INTRA_EMPHASIS |
-		blackfriday.EXTENSION_TABLES |
-		blackfriday.EXTENSION_FENCED_CODE |
-		blackfriday.EXTENSION_AUTOLINK |
-		blackfriday.EXTENSION_STRIKETHROUGH |
-		blackfriday.EXTENSION_SPACE_HEADERS |
-		blackfriday.EXTENSION_HEADER_IDS |
-		blackfriday.EXTENSION_BACKSLASH_LINE_BREAK |
-		blackfriday.EXTENSION_DEFINITION_LISTS
+	"gopkg.in/russross/blackfriday.v2"
 )
 
 type markdownRenderer struct {
@@ -37,19 +18,26 @@ type markdownRenderer struct {
 
 func (r markdownRenderer) Render(filename string) ([]byte, error) {
 	fmt.Println("rendering", filename)
-	md, err := ioutil.ReadFile(filename)
+	input, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
-	flags := commonHTMLFlags
+	flags := blackfriday.CommonHTMLFlags
 	if r.toc {
-		flags |= blackfriday.HTML_TOC
+		flags |= blackfriday.TOC
 	}
-	renderer := blackfriday.HtmlRenderer(flags, "", "")
-	options := blackfriday.Options{
-		Extensions: commonExtensions,
-	}
-	return blackfriday.MarkdownOptions(md, renderer, options), nil
+	renderer := blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
+		Flags: flags,
+	})
+	md := blackfriday.New(blackfriday.WithExtensions(blackfriday.CommonExtensions))
+	node := md.Parse(input)
+	var outbuf bytes.Buffer
+	renderer.RenderHeader(&outbuf, node)
+	node.Walk(func(node *blackfriday.Node, entering bool) blackfriday.WalkStatus {
+		return renderer.RenderNode(&outbuf, node, entering)
+	})
+	renderer.RenderFooter(&outbuf, node)
+	return outbuf.Bytes(), nil
 }
 
 func fatal(err error) {
