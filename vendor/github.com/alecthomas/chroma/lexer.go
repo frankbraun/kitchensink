@@ -50,16 +50,21 @@ type Config struct {
 
 	// If given and greater than 0, expand tabs in the input.
 	// TabSize int
+
+	// Priority of lexer.
+	//
+	// If this is 0 it will be treated as a default of 1.
+	Priority float32
 }
 
 // Token output to formatter.
 type Token struct {
-	Type  TokenType
-	Value string
+	Type  TokenType `json:"type"`
+	Value string    `json:"value"`
 }
 
 func (t *Token) String() string   { return t.Value }
-func (t *Token) GoString() string { return fmt.Sprintf("Token{%s, %q}", t.Type, t.Value) }
+func (t *Token) GoString() string { return fmt.Sprintf("&Token{%s, %q}", t.Type, t.Value) }
 
 func (t *Token) Clone() *Token {
 	clone := &Token{}
@@ -70,6 +75,8 @@ func (t *Token) Clone() *Token {
 type TokeniseOptions struct {
 	// State to start tokenisation in. Defaults to "root".
 	State string
+	// Nested tokenisation.
+	Nested bool
 }
 
 // A Lexer for tokenising source code.
@@ -80,31 +87,29 @@ type Lexer interface {
 	Tokenise(options *TokeniseOptions, text string) (Iterator, error)
 }
 
+// Lexers is a slice of lexers sortable by name.
 type Lexers []Lexer
-
-// Pick attempts to pick the best Lexer for a piece of source code. May return nil.
-func (l Lexers) Pick(text string) Lexer {
-	if len(l) == 0 {
-		return nil
-	}
-	var picked Lexer
-	highest := float32(-1)
-	for _, lexer := range l {
-		if analyser, ok := lexer.(Analyser); ok {
-			score := analyser.AnalyseText(text)
-			if score > highest {
-				highest = score
-				picked = lexer
-				continue
-			}
-		}
-	}
-	return picked
-}
 
 func (l Lexers) Len() int           { return len(l) }
 func (l Lexers) Swap(i, j int)      { l[i], l[j] = l[j], l[i] }
 func (l Lexers) Less(i, j int) bool { return l[i].Config().Name < l[j].Config().Name }
+
+// PrioritisedLexers is a slice of lexers sortable by priority.
+type PrioritisedLexers []Lexer
+
+func (l PrioritisedLexers) Len() int      { return len(l) }
+func (l PrioritisedLexers) Swap(i, j int) { l[i], l[j] = l[j], l[i] }
+func (l PrioritisedLexers) Less(i, j int) bool {
+	ip := l[i].Config().Priority
+	if ip == 0 {
+		ip = 1
+	}
+	jp := l[j].Config().Priority
+	if jp == 0 {
+		jp = 1
+	}
+	return ip > jp
+}
 
 // Analyser determines how appropriate this lexer is for the given text.
 type Analyser interface {

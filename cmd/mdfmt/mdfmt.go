@@ -16,7 +16,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/spf13/hugo/parser"
+	"github.com/gohugoio/hugo/parser"
 )
 
 var (

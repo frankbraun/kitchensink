@@ -159,7 +159,7 @@ func (f *Formatter) writeHTML(w io.Writer, style *chroma.Style, tokens []*chroma
 		fmt.Fprintf(w, "<table%s><tr>", f.styleAttr(css, chroma.LineTable))
 		fmt.Fprintf(w, "<td%s>\n", f.styleAttr(css, chroma.LineTableTD))
 		fmt.Fprintf(w, "<pre%s>", f.styleAttr(css, chroma.Background))
-		for index, _ := range lines {
+		for index := range lines {
 			line := f.baseLineNumber + index
 			highlight, next := f.shouldHighlight(highlightIndex, line)
 			if next {
@@ -169,7 +169,7 @@ func (f *Formatter) writeHTML(w io.Writer, style *chroma.Style, tokens []*chroma
 				fmt.Fprintf(w, "<span%s>", f.styleAttr(css, chroma.LineHighlight))
 			}
 
-			fmt.Fprintf(w, "<span%s>%*d</span>", f.styleAttr(css, chroma.LineNumbersTable), lineDigits, line)
+			fmt.Fprintf(w, "<span%s>%*d\n</span>", f.styleAttr(css, chroma.LineNumbersTable), lineDigits, line)
 
 			if highlight {
 				fmt.Fprintf(w, "</span>")
@@ -241,13 +241,18 @@ func (f *Formatter) shouldHighlight(highlightIndex, line int) (bool, bool) {
 
 func (f *Formatter) class(t chroma.TokenType) string {
 	for t != 0 {
-		cls, ok := chroma.StandardTypes[t]
-		if ok {
-			return cls
+		if cls, ok := chroma.StandardTypes[t]; ok {
+			if cls != "" {
+				return f.prefix + cls
+			}
+			return ""
 		}
 		t = t.Parent()
 	}
-	return chroma.StandardTypes[t]
+	if cls := chroma.StandardTypes[t]; cls != "" {
+		return f.prefix + cls
+	}
+	return ""
 }
 
 func (f *Formatter) styleAttr(styles map[chroma.TokenType]string, tt chroma.TokenType) string {
@@ -267,7 +272,7 @@ func (f *Formatter) styleAttr(styles map[chroma.TokenType]string, tt chroma.Toke
 			}
 		}
 	}
-	return string(fmt.Sprintf(` style="%s"`, styles[tt]))
+	return fmt.Sprintf(` style="%s"`, styles[tt])
 }
 
 func (f *Formatter) tabWidthStyle() string {
@@ -281,8 +286,15 @@ func (f *Formatter) tabWidthStyle() string {
 func (f *Formatter) WriteCSS(w io.Writer, style *chroma.Style) error {
 	css := f.styleToCSS(style)
 	// Special-case background as it is mapped to the outer ".chroma" class.
-	if _, err := fmt.Fprintf(w, "/* %s */ .chroma { %s }\n", chroma.Background, css[chroma.Background]); err != nil {
+	if _, err := fmt.Fprintf(w, "/* %s */ .%schroma { %s }\n", chroma.Background, f.prefix, css[chroma.Background]); err != nil {
 		return err
+	}
+	// Special-case code column of table to expand width.
+	if f.lineNumbers && f.lineNumbersInTable {
+		if _, err := fmt.Fprintf(w, "/* %s */ .%schroma .%s:last-child { width: 100%%; }",
+			chroma.LineTableTD, f.prefix, f.class(chroma.LineTableTD)); err != nil {
+			return err
+		}
 	}
 	tts := []int{}
 	for tt := range css {
@@ -295,7 +307,7 @@ func (f *Formatter) WriteCSS(w io.Writer, style *chroma.Style) error {
 			continue
 		}
 		styles := css[tt]
-		if _, err := fmt.Fprintf(w, "/* %s */ .chroma .%s { %s }\n", tt, f.class(tt), styles); err != nil {
+		if _, err := fmt.Fprintf(w, "/* %s */ .%schroma .%s { %s }\n", tt, f.prefix, f.class(tt), styles); err != nil {
 			return err
 		}
 	}
@@ -317,13 +329,13 @@ func (f *Formatter) styleToCSS(style *chroma.Style) map[chroma.TokenType]string 
 		classes[t] = StyleEntryToCSS(entry)
 	}
 	classes[chroma.Background] += f.tabWidthStyle()
-	lineNumbersStyle := "; margin-right: 0.4em; padding: 0 0.4em 0 0.4em;"
-	classes[chroma.LineNumbers] += lineNumbersStyle
-	classes[chroma.LineNumbersTable] += lineNumbersStyle + " display: block;"
-	classes[chroma.LineHighlight] += "; display: block; width: 100%"
-	classes[chroma.LineTable] += "; border-spacing: 0; padding: 0; margin: 0; border: 0; width: 100%; overflow: auto; display: block;"
-	classes[chroma.LineTableTD] += "; vertical-align: top; padding: 0; margin: 0; border: 0;"
-
+	lineNumbersStyle := "margin-right: 0.4em; padding: 0 0.4em 0 0.4em;"
+	// All rules begin with default rules followed by user provided rules
+	classes[chroma.LineNumbers] = lineNumbersStyle + classes[chroma.LineNumbers]
+	classes[chroma.LineNumbersTable] = lineNumbersStyle + classes[chroma.LineNumbersTable]
+	classes[chroma.LineHighlight] = "display: block; width: 100%;" + classes[chroma.LineHighlight]
+	classes[chroma.LineTable] = "border-spacing: 0; padding: 0; margin: 0; border: 0; width: auto; overflow: auto; display: block;" + classes[chroma.LineTable]
+	classes[chroma.LineTableTD] = "vertical-align: top; padding: 0; margin: 0; border: 0;" + classes[chroma.LineTableTD]
 	return classes
 }
 
@@ -342,15 +354,19 @@ func StyleEntryToCSS(e chroma.StyleEntry) string {
 	if e.Italic == chroma.Yes {
 		styles = append(styles, "font-style: italic")
 	}
+	if e.Underline == chroma.Yes {
+		styles = append(styles, "text-decoration: underline")
+	}
 	return strings.Join(styles, "; ")
 }
 
 // Compress CSS attributes - remove spaces, transform 6-digit colours to 3.
 func compressStyle(s string) string {
-	s = strings.Replace(s, " ", "", -1)
 	parts := strings.Split(s, ";")
 	out := []string{}
 	for _, p := range parts {
+		p = strings.Join(strings.Fields(p), " ")
+		p = strings.Replace(p, ": ", ":", 1)
 		if strings.Contains(p, "#") {
 			c := p[len(p)-6:]
 			if c[0] == c[1] && c[2] == c[3] && c[4] == c[5] {

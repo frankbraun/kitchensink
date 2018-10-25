@@ -6,30 +6,30 @@ Chroma takes source code and other structured text and converts it into syntax
 highlighted HTML, ANSI-coloured text, etc.
 
 Chroma is based heavily on [Pygments](http://pygments.org/), and includes
-translaters for Pygments lexers and styles.
+translators for Pygments lexers and styles.
 
 ## Table of Contents
 
 <!-- MarkdownTOC -->
 
-- [Supported languages](#supported-languages)
-- [Using the library](#using-the-library)
-  - [Quick start](#quick-start)
-  - [Identifying the language](#identifying-the-language)
-  - [Formatting the output](#formatting-the-output)
-  - [The HTML formatter](#the-html-formatter)
-- [More detail](#more-detail)
-  - [Lexers](#lexers)
-  - [Formatters](#formatters)
-  - [Styles](#styles)
-- [Command-line interface](#command-line-interface)
-- [What's missing compared to Pygments?](#whats-missing-compared-to-pygments)
+1. [Supported languages](#supported-languages)
+1. [Using the library](#using-the-library)
+    1. [Quick start](#quick-start)
+    1. [Identifying the language](#identifying-the-language)
+    1. [Formatting the output](#formatting-the-output)
+    1. [The HTML formatter](#the-html-formatter)
+1. [More detail](#more-detail)
+    1. [Lexers](#lexers)
+    1. [Formatters](#formatters)
+    1. [Styles](#styles)
+1. [Command-line interface](#command-line-interface)
+1. [What's missing compared to Pygments?](#whats-missing-compared-to-pygments)
 
 <!-- /MarkdownTOC -->
 
 ## Supported languages
 
-ABNF, ANTLR, APL, ActionScript, ActionScript 3, Ada, Angular2, ApacheConf, AppleScript, Awk, BNF, Base Makefile, Bash, Batchfile, BlitzBasic, Brainfuck, C, C#, C++, CFEngine3, CMake, COBOL, CSS, Cap&#x27;n Proto, Ceylon, ChaiScript, Cheetah, Clojure, CoffeeScript, Common Lisp, Coq, Crystal, Cython, DTD, Dart, Diff, Django/Jinja, Docker, EBNF, Elixir, Elm, EmacsLisp, Erlang, FSharp, Factor, Fish, Forth, Fortran, GAS, GDScript, GLSL, Genshi, Genshi HTML, Genshi Text, Gnuplot, Go, Groovy, HTML, Handlebars, Haskell, Haxe, Hexdump, Hy, INI, Idris, Io, JSON, Java, JavaScript, Julia, Kotlin, LLVM, Lighttpd configuration file, Lua, Mako, Mason, Mathematica, MiniZinc, Modula-2, MySQL, Myghty, NASM, Newspeak, Nginx configuration file, Nim, OCaml, Octave, PHP, PL/pgSQL, POVRay, PacmanConf, Perl, Pig, PkgConfig, PostScript, PostgreSQL SQL dialect, PowerShell, Prolog, Protocol Buffer, Puppet, Python, Python 3, QBasic, R, Racket, Ragel, Rexx, Ruby, Rust, SPARQL, SQL, Sass, Scala, Scheme, Scilab, Smalltalk, Smarty, Snobol, SquidConf, Swift, TASM, Tcl, Tcsh, Termcap, Terminfo, Terraform, Thrift, Transact-SQL, Turtle, Twig, TypeScript, TypoScript, TypoScriptCssData, TypoScriptHtmlData, VHDL, VimL, XML, Xorg, YAML, cfstatement, markdown, reStructuredText, reg, systemverilog, verilog
+ABNF, ANTLR, APL, ActionScript, ActionScript 3, Ada, Angular2, ApacheConf, AppleScript, Awk, BNF, Ballerina, Base Makefile, Bash, Batchfile, BlitzBasic, Brainfuck, C, C#, C++, CFEngine3, CMake, COBOL, CSS, Cap'n Proto, Ceylon, ChaiScript, Cheetah, Clojure, CoffeeScript, Common Lisp, Coq, Crystal, Cython, DTD, Dart, Diff, Django/Jinja, Docker, EBNF, Elixir, Elm, EmacsLisp, Erlang, FSharp, Factor, Fish, Forth, Fortran, GAS, GDScript, GLSL, Genshi, Genshi HTML, Genshi Text, Gnuplot, Go, Go HTML Template, Go Text Template, Groovy, HTML, HTTP, Handlebars, Haskell, Haxe, Hexdump, Hy, INI, Idris, Io, JSON, JSX, Java, JavaScript, Julia, Kotlin, LLVM, Lighttpd configuration file, Lua, Mako, Mason, Mathematica, MiniZinc, Modula-2, MorrowindScript, MySQL, Myghty, NASM, Newspeak, Nginx configuration file, Nim, Nix, OCaml, Objective-C, Octave, Org Mode, PHP, PL/pgSQL, POVRay, PacmanConf, Perl, Pig, PkgConfig, PostScript, PostgreSQL SQL dialect, PowerShell, Prolog, Protocol Buffer, Puppet, Python, Python 3, QBasic, R, Racket, Ragel, Rexx, Ruby, Rust, SCSS, SPARQL, SQL, Sass, Scala, Scheme, Scilab, Smalltalk, Smarty, Snobol, Solidity, SquidConf, Swift, TASM, TOML, Tcl, Tcsh, TeX, Termcap, Terminfo, Terraform, Thrift, Transact-SQL, Turtle, Twig, TypeScript, TypoScript, TypoScriptCssData, TypoScriptHtmlData, VHDL, VimL, WDTE, XML, Xorg, YAML, cfstatement, markdown, reStructuredText, reg, systemverilog, verilog
 
 _I will attempt to keep this section up to date, but an authoritative list can be
 displayed with `chroma --list`._
@@ -86,7 +86,7 @@ written in. There are three primary ways to do that:
     lexer := lexers.Analyse("package main\n\nfunc main()\n{\n}\n")
     ```
 
-In all cases, `nil` will be returned if the langauge can not be identified.
+In all cases, `nil` will be returned if the language can not be identified.
 
 ```go
 if lexer == nil {
@@ -133,7 +133,7 @@ err := formatter.Format(w, style, iterator)
 ### The HTML formatter
 
 By default the `html` registered formatter generates standalone HTML with
-embedded CSS. More flexibility is available through the `lexers/html` package.
+embedded CSS. More flexibility is available through the `formatters/html` package.
 
 Firstly, the output generated by the formatter can be customised with the
 following constructor options:
@@ -144,6 +144,7 @@ following constructor options:
 - `TabWidth(width)` - Set the rendered tab width, in characters.
 - `WithLineNumbers()` - Render line numbers (style with `LineNumbers`).
 - `HighlightLines(ranges)` - Highlight lines in these ranges (style with `LineHighlight`).
+- `LineNumbersInTable()` - Use a table for formatting line numbers and code, rather than spans.
 
 If `WithClasses()` is used, the corresponding CSS can be obtained from the formatter with:
 
@@ -186,6 +187,8 @@ formatter outputs raw tokens. The latter is useful for debugging lexers.
 Chroma styles use the [same syntax](http://pygments.org/docs/styles/) as Pygments.
 
 All Pygments styles have been converted to Chroma using the `_tools/style.py` script.
+
+For a quick overview of the available styles and how they look, check out the [Chroma Style Gallery](https://xyproto.github.io/splash/docs/).
 
 ## Command-line interface
 

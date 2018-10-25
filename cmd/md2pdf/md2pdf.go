@@ -11,8 +11,8 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/gohugoio/hugo/parser"
 	"github.com/russross/blackfriday/v2"
-	"github.com/spf13/hugo/parser"
 	"gopkg.in/yaml.v2"
 )
 
