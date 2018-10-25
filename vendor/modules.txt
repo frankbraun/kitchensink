@@ -1,4 +1,4 @@
-# github.com/BurntSushi/toml v0.3.1
+# github.com/BurntSushi/toml v0.0.0-20170626110600-a368813c5e64
 github.com/BurntSushi/toml
 # github.com/PuerkitoBio/purell v1.1.0
 github.com/PuerkitoBio/purell
@@ -38,7 +38,7 @@ github.com/alecthomas/chroma/lexers/v
 github.com/alecthomas/chroma/lexers/w
 github.com/alecthomas/chroma/lexers/x
 github.com/alecthomas/chroma/lexers/y
-# github.com/chaseadamsio/goorgeous v2.0.0+incompatible
+# github.com/chaseadamsio/goorgeous v1.1.0
 github.com/chaseadamsio/goorgeous
 # github.com/clbanning/mxj v1.8.3
 github.com/clbanning/mxj
@@ -110,12 +110,12 @@ github.com/magiconair/properties
 github.com/mattn/go-runewidth
 # github.com/miekg/mmark v1.3.6
 github.com/miekg/mmark
-# github.com/mitchellh/mapstructure v1.1.2
+# github.com/mitchellh/mapstructure v1.0.0
 github.com/mitchellh/mapstructure
 # github.com/mutecomm/mute v0.0.0-20180427225835-8124193e6371
 github.com/mutecomm/mute/tui/textbuffer
 github.com/mutecomm/mute/util/browser
-# github.com/olekukonko/tablewriter v0.0.0-20180912035003-be2c049b30cc
+# github.com/olekukonko/tablewriter v0.0.0-20180506121414-d4647c9c7a84
 github.com/olekukonko/tablewriter
 # github.com/pelletier/go-toml v1.2.0
 github.com/pelletier/go-toml
@@ -138,9 +138,9 @@ github.com/spf13/afero/mem
 github.com/spf13/cast
 # github.com/spf13/jwalterweatherman v1.0.0
 github.com/spf13/jwalterweatherman
-# github.com/spf13/pflag v1.0.3
+# github.com/spf13/pflag v1.0.2
 github.com/spf13/pflag
-# github.com/spf13/viper v1.2.1
+# github.com/spf13/viper v1.2.0
 github.com/spf13/viper
 # golang.org/x/crypto v0.0.0-20181025113841-85e1b3f9139a
 golang.org/x/crypto/ssh/terminal
@@ -150,9 +150,9 @@ golang.org/x/crypto/blake2b
 golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/poly1305
 golang.org/x/crypto/salsa20/salsa
-# golang.org/x/net v0.0.0-20181023162649-9b4f9f5ad519
+# golang.org/x/net v0.0.0-20180906233101-161cd47e91fd
 golang.org/x/net/idna
-# golang.org/x/sys v0.0.0-20181025063200-d989b31c8746
+# golang.org/x/sys v0.0.0-20181023152157-44b849a8bc13
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/cpu
