@@ -1,0 +1,46 @@
+module github.com/frankbraun/kitchensink
+
+require (
+	github.com/BurntSushi/toml v0.0.0-20170626110600-a368813c5e64
+	github.com/PuerkitoBio/purell v0.0.0-20170917143911-fd18e053af8a
+	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
+	github.com/ajstarks/svgo v0.0.0-20181006003313-6ce6a3bcf6cd
+	github.com/alecthomas/chroma v0.0.0-20171014090240-02c4adc0664a
+	github.com/chaseadamsio/goorgeous v1.1.0
+	github.com/clbanning/mxj v0.0.0-20180418195244-1f00e0bf9bac
+	github.com/danwakefield/fnmatch v0.0.0-20160403171240-cbb64ac3d964
+	github.com/dlclark/regexp2 v1.1.6
+	github.com/frankbraun/codechain v0.0.0-20181003151823-874744930a10
+	github.com/frankbraun/huffman v0.0.0-20180512204827-00ccac022fac
+	github.com/frankbraun/tcell v0.0.0-20170501212358-62d7350d170f
+	github.com/fsnotify/fsnotify v1.4.7
+	github.com/gdamore/encoding v0.0.0-20151215212835-b23993cbb635
+	github.com/gdamore/tcell v1.0.0
+	github.com/gohugoio/hugo v0.30.2
+	github.com/icza/bitio v0.0.0-20180221120200-b25b30b42508
+	github.com/icza/huffman v0.0.0-20170125130617-3d0826129c71
+	github.com/jdkato/prose v0.0.0-20170930192320-2f88f08e8841
+	github.com/kyokomi/emoji v0.0.0-20170519011427-ddd4753eac3f
+	github.com/lucasb-eyer/go-colorful v0.0.0-20180526135729-345fbb3dbcdb
+	github.com/mattn/go-runewidth v0.0.2
+	github.com/miekg/mmark v0.0.0-20170831063344-057eb9e3ae87
+	github.com/mitchellh/mapstructure v0.0.0-20170523030023-d0303fe80992
+	github.com/mutecomm/mute v0.0.0-20180427225835-8124193e6371
+	github.com/peterh/liner v0.0.0-20180504030148-80ce870644db
+	github.com/rivo/tview v0.0.0-20180528192725-71ecf1f4299c
+	github.com/russross/blackfriday v0.0.0-20171011182219-6d1ef893fcb0
+	github.com/russross/blackfriday/v2 v2.0.1
+	github.com/sergi/go-diff v1.0.0
+	github.com/shurcooL/sanitized_anchor_name v0.0.0-20170918181015-86672fcb3f95
+	github.com/spf13/afero v0.0.0-20171003204538-8a6ade7159a9
+	github.com/spf13/cast v1.2.0
+	github.com/spf13/hugo v0.0.0-20180525165718-171caf28a903
+	github.com/spf13/jwalterweatherman v0.0.0-20170901151539-12bd96e66386
+	github.com/spf13/pflag v0.0.0-20171001220252-be7121dd7a93
+	golang.org/x/crypto v0.0.0-20180910181607-0e37d006457b
+	golang.org/x/net v0.0.0-20180530234432-1e491301e022
+	golang.org/x/sys v0.0.0-20180926160741-c2ed4eda69e7
+	golang.org/x/text v0.3.0
+	gopkg.in/russross/blackfriday.v2 v2.0.0
+	gopkg.in/yaml.v2 v2.2.1
+)

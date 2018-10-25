@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"github.com/frankbraun/kitchensink/markup"
-	"gopkg.in/russross/blackfriday.v2"
+	"github.com/russross/blackfriday/v2"
 )
 
 type markdownRenderer struct {
