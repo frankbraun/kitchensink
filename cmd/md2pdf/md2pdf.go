@@ -91,8 +91,8 @@ func md2pdf(mdFile, pdfFile string, toc, hugo bool) error {
 		if ok && date != "" {
 			md = append(md, []byte(date+" ")...)
 		}
-		pdfFile := strings.TrimSuffix(base, ".md") + ".pdf"
-		txtFile := strings.TrimSuffix(base, ".md") + ".txt"
+		pdfFile := strings.TrimSuffix(base, ".txt") + ".pdf"
+		txtFile := strings.TrimSuffix(base, ".txt") + ".txt"
 		download := fmt.Sprintf("[read as [txt](/essay/%s) or [PDF](/essay/%s)]\n\n",
 			txtFile, pdfFile)
 		md = append(md, []byte(download)...)
