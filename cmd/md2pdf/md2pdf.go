@@ -87,14 +87,15 @@ func md2pdf(mdFile, pdfFile string, toc, hugo bool) error {
 	md = append(md, []byte("---\n\n")...)
 	if hugo {
 		base := filepath.Base(mdFile)
+		category := filepath.Base(filepath.Dir(mdFile))
 		date, ok := yml["date"].(string)
 		if ok && date != "" {
 			md = append(md, []byte(date+" ")...)
 		}
 		pdfFile := strings.TrimSuffix(base, ".txt") + ".pdf"
 		txtFile := strings.TrimSuffix(base, ".txt") + ".txt"
-		download := fmt.Sprintf("[read as [txt](/essay/%s) or [PDF](/essay/%s)]\n\n",
-			txtFile, pdfFile)
+		download := fmt.Sprintf("[read as [txt](/%s/%s) or [PDF](/%s/%s)]\n\n",
+			category, txtFile, category, pdfFile)
 		md = append(md, []byte(download)...)
 		md = append(md, []byte("<!--more-->\n")...)
 	}
