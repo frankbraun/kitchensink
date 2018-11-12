@@ -38,7 +38,7 @@ func pandoc(content []byte, pdfFile string, toc bool) error {
 	}()
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, out)
+		fmt.Fprintln(os.Stderr, string(out))
 		return err
 	}
 	return nil
