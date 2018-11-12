@@ -1,4 +1,4 @@
-# github.com/BurntSushi/toml v0.0.0-20170626110600-a368813c5e64
+# github.com/BurntSushi/toml v0.3.1
 github.com/BurntSushi/toml
 # github.com/PuerkitoBio/purell v1.1.0
 github.com/PuerkitoBio/purell
@@ -6,7 +6,7 @@ github.com/PuerkitoBio/purell
 github.com/PuerkitoBio/urlesc
 # github.com/ajstarks/svgo v0.0.0-20181006003313-6ce6a3bcf6cd
 github.com/ajstarks/svgo/float
-# github.com/alecthomas/chroma v0.5.0
+# github.com/alecthomas/chroma v0.6.0
 github.com/alecthomas/chroma
 github.com/alecthomas/chroma/formatters
 github.com/alecthomas/chroma/formatters/html
@@ -38,7 +38,7 @@ github.com/alecthomas/chroma/lexers/v
 github.com/alecthomas/chroma/lexers/w
 github.com/alecthomas/chroma/lexers/x
 github.com/alecthomas/chroma/lexers/y
-# github.com/chaseadamsio/goorgeous v1.1.0
+# github.com/chaseadamsio/goorgeous v2.0.0+incompatible
 github.com/chaseadamsio/goorgeous
 # github.com/clbanning/mxj v1.8.3
 github.com/clbanning/mxj
@@ -47,7 +47,7 @@ github.com/danwakefield/fnmatch
 # github.com/dlclark/regexp2 v1.1.6
 github.com/dlclark/regexp2
 github.com/dlclark/regexp2/syntax
-# github.com/frankbraun/codechain v0.0.0-20181024170926-fa9bf77e031c
+# github.com/frankbraun/codechain v0.0.0-20181031203028-69447b64df9d
 github.com/frankbraun/codechain/util/file
 github.com/frankbraun/codechain/util/terminal
 github.com/frankbraun/codechain/util/bzero
@@ -102,7 +102,7 @@ github.com/jdkato/prose/transform
 github.com/jdkato/prose/internal/util
 # github.com/kyokomi/emoji v1.5.1
 github.com/kyokomi/emoji
-# github.com/lucasb-eyer/go-colorful v0.0.0-20180709185858-c7842319cf3a
+# github.com/lucasb-eyer/go-colorful v0.0.0-20181028223441-12d3b2882a08
 github.com/lucasb-eyer/go-colorful
 # github.com/magiconair/properties v1.8.0
 github.com/magiconair/properties
@@ -110,18 +110,18 @@ github.com/magiconair/properties
 github.com/mattn/go-runewidth
 # github.com/miekg/mmark v1.3.6
 github.com/miekg/mmark
-# github.com/mitchellh/mapstructure v1.0.0
+# github.com/mitchellh/mapstructure v1.1.2
 github.com/mitchellh/mapstructure
 # github.com/mutecomm/mute v0.0.0-20180427225835-8124193e6371
 github.com/mutecomm/mute/tui/textbuffer
 github.com/mutecomm/mute/util/browser
-# github.com/olekukonko/tablewriter v0.0.0-20180506121414-d4647c9c7a84
+# github.com/olekukonko/tablewriter v0.0.1
 github.com/olekukonko/tablewriter
 # github.com/pelletier/go-toml v1.2.0
 github.com/pelletier/go-toml
 # github.com/peterh/liner v1.1.0
 github.com/peterh/liner
-# github.com/rivo/tview v0.0.0-20181018063748-a7c1880d62d3
+# github.com/rivo/tview v0.0.0-20181110120306-8cf347b745d0
 github.com/rivo/tview
 # github.com/russross/blackfriday v0.0.0-20180804101149-46c73eb196ba
 github.com/russross/blackfriday
@@ -134,15 +134,15 @@ github.com/shurcooL/sanitized_anchor_name
 # github.com/spf13/afero v1.1.2
 github.com/spf13/afero
 github.com/spf13/afero/mem
-# github.com/spf13/cast v1.2.0
+# github.com/spf13/cast v1.3.0
 github.com/spf13/cast
 # github.com/spf13/jwalterweatherman v1.0.0
 github.com/spf13/jwalterweatherman
-# github.com/spf13/pflag v1.0.2
+# github.com/spf13/pflag v1.0.3
 github.com/spf13/pflag
-# github.com/spf13/viper v1.2.0
+# github.com/spf13/viper v1.2.1
 github.com/spf13/viper
-# golang.org/x/crypto v0.0.0-20181025113841-85e1b3f9139a
+# golang.org/x/crypto v0.0.0-20181112202954-3d3f9f413869
 golang.org/x/crypto/ssh/terminal
 golang.org/x/crypto/argon2
 golang.org/x/crypto/nacl/secretbox
@@ -150,9 +150,9 @@ golang.org/x/crypto/blake2b
 golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/poly1305
 golang.org/x/crypto/salsa20/salsa
-# golang.org/x/net v0.0.0-20180906233101-161cd47e91fd
+# golang.org/x/net v0.0.0-20181108082009-03003ca0c849
 golang.org/x/net/idna
-# golang.org/x/sys v0.0.0-20181023152157-44b849a8bc13
+# golang.org/x/sys v0.0.0-20181107165924-66b7b1311ac8
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/cpu
