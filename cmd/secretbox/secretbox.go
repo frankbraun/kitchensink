@@ -22,6 +22,7 @@ func usage() {
 }
 
 func main() {
+	flag.Usage = usage
 	flag.Parse()
 	if flag.NArg() != 3 {
 		usage()
