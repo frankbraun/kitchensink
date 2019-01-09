@@ -26,8 +26,8 @@ var (
 	coins  = []string{
 		"Bitcoin",
 		"Bitcoin Cash",
-		"Bitcoin Cash SV",
 		"Bitcoin Gold",
+		"Bitcoin SV",
 		"Dash",
 		"Decred",
 		"Ethereum",
