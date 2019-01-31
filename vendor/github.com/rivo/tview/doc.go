@@ -21,6 +21,7 @@ The package implements the following widgets:
   - Form: Forms composed of input fields, drop down selections, checkboxes, and
     buttons.
   - Modal: A centered window with a text message and one or more buttons.
+  - Grid: A grid based layout manager.
   - Flex: A Flexbox based layout manager.
   - Pages: A page based layout manager.
 
@@ -157,6 +158,11 @@ documentation for details):
 One exception to this is the io.Writer interface implemented by TextView. You
 can safely write to a TextView from any goroutine. See the TextView
 documentation for details.
+
+You can also call Application.Draw() from any goroutine without having to wrap
+it in QueueUpdate(). And, as mentioned above, key event callbacks are executed
+in the main goroutine and thus should not use QueueUpdate() as that may lead to
+deadlocks.
 
 Type Hierarchy
 

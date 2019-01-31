@@ -6,7 +6,7 @@ github.com/PuerkitoBio/purell
 github.com/PuerkitoBio/urlesc
 # github.com/ajstarks/svgo v0.0.0-20181006003313-6ce6a3bcf6cd
 github.com/ajstarks/svgo/float
-# github.com/alecthomas/chroma v0.6.0
+# github.com/alecthomas/chroma v0.6.2
 github.com/alecthomas/chroma
 github.com/alecthomas/chroma/formatters
 github.com/alecthomas/chroma/formatters/html
@@ -40,14 +40,14 @@ github.com/alecthomas/chroma/lexers/x
 github.com/alecthomas/chroma/lexers/y
 # github.com/chaseadamsio/goorgeous v2.0.0+incompatible
 github.com/chaseadamsio/goorgeous
-# github.com/clbanning/mxj v1.8.3
+# github.com/clbanning/mxj v1.8.4
 github.com/clbanning/mxj
 # github.com/danwakefield/fnmatch v0.0.0-20160403171240-cbb64ac3d964
 github.com/danwakefield/fnmatch
 # github.com/dlclark/regexp2 v1.1.6
 github.com/dlclark/regexp2
 github.com/dlclark/regexp2/syntax
-# github.com/frankbraun/codechain v0.0.0-20181031203028-69447b64df9d
+# github.com/frankbraun/codechain v0.0.0-20190128174530-0546a4cee715
 github.com/frankbraun/codechain/util/file
 github.com/frankbraun/codechain/util/terminal
 github.com/frankbraun/codechain/util/bzero
@@ -57,9 +57,9 @@ github.com/frankbraun/huffman/hufio
 github.com/frankbraun/tcell
 # github.com/fsnotify/fsnotify v1.4.7
 github.com/fsnotify/fsnotify
-# github.com/gdamore/encoding v0.0.0-20151215212835-b23993cbb635
+# github.com/gdamore/encoding v1.0.0
 github.com/gdamore/encoding
-# github.com/gdamore/tcell v1.1.0
+# github.com/gdamore/tcell v1.1.1
 github.com/gdamore/tcell
 github.com/gdamore/tcell/terminfo
 # github.com/gohugoio/hugo v0.49.2
@@ -100,13 +100,13 @@ github.com/icza/huffman
 # github.com/jdkato/prose v1.1.0
 github.com/jdkato/prose/transform
 github.com/jdkato/prose/internal/util
-# github.com/kyokomi/emoji v1.5.1
+# github.com/kyokomi/emoji v2.0.0+incompatible
 github.com/kyokomi/emoji
 # github.com/lucasb-eyer/go-colorful v0.0.0-20181028223441-12d3b2882a08
 github.com/lucasb-eyer/go-colorful
 # github.com/magiconair/properties v1.8.0
 github.com/magiconair/properties
-# github.com/mattn/go-runewidth v0.0.3
+# github.com/mattn/go-runewidth v0.0.4
 github.com/mattn/go-runewidth
 # github.com/miekg/mmark v1.3.6
 github.com/miekg/mmark
@@ -121,7 +121,7 @@ github.com/olekukonko/tablewriter
 github.com/pelletier/go-toml
 # github.com/peterh/liner v1.1.0
 github.com/peterh/liner
-# github.com/rivo/tview v0.0.0-20181110120306-8cf347b745d0
+# github.com/rivo/tview v0.0.0-20190124120153-84fdb36408f3
 github.com/rivo/tview
 # github.com/russross/blackfriday v0.0.0-20180804101149-46c73eb196ba
 github.com/russross/blackfriday
@@ -129,9 +129,9 @@ github.com/russross/blackfriday
 github.com/russross/blackfriday/v2
 # github.com/sergi/go-diff v1.0.0
 github.com/sergi/go-diff/diffmatchpatch
-# github.com/shurcooL/sanitized_anchor_name v0.0.0-20170918181015-86672fcb3f95
+# github.com/shurcooL/sanitized_anchor_name v1.0.0
 github.com/shurcooL/sanitized_anchor_name
-# github.com/spf13/afero v1.1.2
+# github.com/spf13/afero v1.2.1
 github.com/spf13/afero
 github.com/spf13/afero/mem
 # github.com/spf13/cast v1.3.0
@@ -140,9 +140,9 @@ github.com/spf13/cast
 github.com/spf13/jwalterweatherman
 # github.com/spf13/pflag v1.0.3
 github.com/spf13/pflag
-# github.com/spf13/viper v1.2.1
+# github.com/spf13/viper v1.3.1
 github.com/spf13/viper
-# golang.org/x/crypto v0.0.0-20181112202954-3d3f9f413869
+# golang.org/x/crypto v0.0.0-20190130090550-b01c7a725664
 golang.org/x/crypto/ssh/terminal
 golang.org/x/crypto/argon2
 golang.org/x/crypto/nacl/secretbox
@@ -150,9 +150,9 @@ golang.org/x/crypto/blake2b
 golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/poly1305
 golang.org/x/crypto/salsa20/salsa
-# golang.org/x/net v0.0.0-20181108082009-03003ca0c849
+# golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3
 golang.org/x/net/idna
-# golang.org/x/sys v0.0.0-20181107165924-66b7b1311ac8
+# golang.org/x/sys v0.0.0-20190130150945-aca44879d564
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/cpu
@@ -164,5 +164,5 @@ golang.org/x/text/unicode/norm
 golang.org/x/text/width
 golang.org/x/text/secure/bidirule
 golang.org/x/text/unicode/bidi
-# gopkg.in/yaml.v2 v2.2.1
+# gopkg.in/yaml.v2 v2.2.2
 gopkg.in/yaml.v2
