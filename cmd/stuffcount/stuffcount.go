@@ -25,10 +25,11 @@ func countStuff(filename string) error {
 	}
 	s := bufio.NewScanner(f)
 	var (
-		category string
-		counter  int
-		toPurge  int
-		total    int
+		category   string
+		counter    int
+		toPurge    int
+		total      int
+		totalPurge int
 	)
 	for s.Scan() {
 		line := s.Text()
@@ -41,6 +42,7 @@ func countStuff(filename string) error {
 			counter++
 			if strings.Contains(line, "-   ~~") {
 				toPurge++
+				totalPurge++
 			}
 			total++
 		}
@@ -50,7 +52,11 @@ func countStuff(filename string) error {
 	}
 	printCategory(category, counter, toPurge)
 	fmt.Println("----------------------------------------")
-	fmt.Printf("total: %d\n", total)
+	fmt.Printf("total: %d", total)
+	if totalPurge > 0 {
+		fmt.Printf(" (%d after purge)", total-totalPurge)
+	}
+	fmt.Printf("\n")
 	return err
 }
 
