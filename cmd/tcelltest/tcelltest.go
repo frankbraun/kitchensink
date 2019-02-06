@@ -4,11 +4,7 @@ package main
 import (
 	"flag"
 	"fmt"
-
-	//"io"
 	"os"
-	//"os/signal"
-	//"syscall"
 	//ptmx "github.com/frankbraun/pty"
 	//"github.com/frankbraun/tcell"
 	//"golang.org/x/crypto/ssh/terminal"

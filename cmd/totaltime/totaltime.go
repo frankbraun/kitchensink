@@ -78,7 +78,7 @@ func totalTime() error {
 					return err
 				}
 				if dur > math.MaxInt64-total {
-					return errors.New("more than 290 years of material!")
+					return errors.New("more than 290 years of material")
 				}
 				total += dur
 				return nil
