@@ -7,7 +7,7 @@ import (
 	"math"
 	"os"
 
-	"github.com/ajstarks/svgo/float"
+	svg "github.com/ajstarks/svgo/float"
 )
 
 func choseLineStyle(color, highlightColor string, highlightText int, nums ...int) string {
