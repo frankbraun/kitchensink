@@ -31,6 +31,7 @@ var (
 		"Dash",
 		"Decred",
 		"Ethereum",
+		"Grin",
 		"Litecoin",
 		"Monero",
 		"Particl",
