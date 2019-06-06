@@ -25,6 +25,7 @@ var (
 	write       = flag.Bool("w", false, "write result to (source) file instead of stdout")
 	doDiff      = flag.Bool("d", false, "display diffs instead of rewriting files")
 	inlineLinks = flag.Bool("i", false, "use inline links, rather than reference-style links")
+	hugo        = flag.Bool("hugo", false, "format for Hugo")
 
 	exitCode = 0
 )
@@ -73,8 +74,12 @@ func pandocProcess(content []byte) ([]byte, error) {
 	}
 	out = bytes.Replace(out, []byte("<em>"), []byte("☢"), -1)
 	out = bytes.Replace(out, []byte("</em>"), []byte("☢"), -1)
+	toFormat := "markdown"
+	if *hugo {
+		toFormat = "markdown_strict+pipe_tables"
+	}
 	args := []string{
-		"pandoc", "-f", "html", "-t", "markdown",
+		"pandoc", "-f", "html", "-t", toFormat,
 	}
 	if !*inlineLinks {
 		args = append(args, "--reference-links")
