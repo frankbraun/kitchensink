@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
-	"strconv"
 	"time"
 )
 
@@ -15,10 +15,12 @@ const (
 	euroAPI  = "http://data.fixer.io/api/latest"
 	xauAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?limit=1"
 	xagAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/SILVER.json?limit=1"
-	coinsAPI = "https://api.coinmarketcap.com/v1/ticker/?convert=EUR&limit=2000"
+	coinsAPI = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
 )
 
 var (
+	// CoinMarketCap API key can be set via environment variable COINMARKETCAP_API_KEY
+	coinmarketcap = os.Getenv("COINMARKETCAP_API_KEY")
 	// Fixer API key can be set via environment variable FIXER_API_KEY
 	fixer = os.Getenv("FIXER_API_KEY")
 	// Quandl API key can be set via environment variable QUANDL_API_KEY
@@ -108,18 +110,39 @@ func getLBMAPrice(api string, dataIndex int) (float64, error) {
 }
 
 func getCoinPrices() ([]interface{}, error) {
-	b, err := httpGetWithWarning(coinsAPI)
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", coinsAPI, nil)
 	if err != nil {
 		return nil, err
 	}
-	if b == nil {
+
+	q := url.Values{}
+	q.Add("start", "1")
+	q.Add("limit", "2000")
+	q.Add("convert", "EUR")
+
+	req.Header.Set("Accepts", "application/json")
+	req.Header.Add("X-CMC_PRO_API_KEY", coinmarketcap)
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode != http.StatusOK {
+		warning(fmt.Sprintf("GET %s: %s", coinmarketcap, resp.Status))
 		return nil, nil
 	}
-	jsn := make([]interface{}, 0)
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	jsn := make(map[string]interface{})
 	if err := json.Unmarshal(b, &jsn); err != nil {
 		return nil, err
 	}
-	return jsn, nil
+	return jsn["data"].([]interface{}), nil
 }
 
 func warning(warn string) {
@@ -171,11 +194,9 @@ func main() {
 			_, ok := names[name]
 			if ok {
 				// we are interested in this coin -> store price and symbol
-				f := coin["price_eur"].(string)
-				p, err := strconv.ParseFloat(f, 64)
-				if err != nil {
-					fatal(err)
-				}
+				quote := coin["quote"].(map[string]interface{})
+				eur := quote["EUR"].(map[string]interface{})
+				p := eur["price"].(float64)
 				prices[name] = &result{symbol: coin["symbol"].(string), price: p}
 				if coin["symbol"] == "BTC" {
 					btc = p
