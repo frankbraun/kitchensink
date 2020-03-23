@@ -16,7 +16,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func pandoc(content []byte, pdfFile string, toc bool) error {
+func pandoc(content []byte, pdfFile string, toc, xelatex bool) error {
 	args := []string{
 		"--standalone", "-o", pdfFile,
 		//"--variable", "classoption=twocolumn",
@@ -26,6 +26,9 @@ func pandoc(content []byte, pdfFile string, toc bool) error {
 	}
 	if toc {
 		args = append(args, "--toc")
+	}
+	if xelatex {
+		args = append(args, "--latex-engine=xelatex")
 	}
 	cmd := exec.Command("pandoc", args...)
 	stdin, err := cmd.StdinPipe()
@@ -44,7 +47,7 @@ func pandoc(content []byte, pdfFile string, toc bool) error {
 	return nil
 }
 
-func md2pdf(mdFile, pdfFile string, toc, hugo bool) error {
+func md2pdf(mdFile, pdfFile string, toc, hugo, xelatex bool) error {
 	// parse the file with hugo/parser to extract front matter
 	fp, err := os.Open(mdFile)
 	if err != nil {
@@ -113,7 +116,7 @@ func md2pdf(mdFile, pdfFile string, toc, hugo bool) error {
 			return err
 		}
 	} else {
-		if err := pandoc(md, pdfFile, toc); err != nil {
+		if err := pandoc(md, pdfFile, toc, xelatex); err != nil {
 			return err
 		}
 	}
@@ -135,11 +138,13 @@ func usage() {
 func main() {
 	hugo := flag.Bool("hugo", false, "generate output for Hugo instead of PDF")
 	toc := flag.Bool("toc", false, "generate table of contents (TOC)")
+	xelatex := flag.Bool("xelatex", false, "use xelatex engine")
 	flag.Parse()
 	if flag.NArg() != 2 {
 		usage()
 	}
-	if err := md2pdf(flag.Arg(0), flag.Arg(1), *toc, *hugo); err != nil {
+	err := md2pdf(flag.Arg(0), flag.Arg(1), *toc, *hugo, *xelatex)
+	if err != nil {
 		fatal(err)
 	}
 }
