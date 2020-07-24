@@ -23,20 +23,20 @@ func (a *stringArray) Set(value string) error {
 	return nil
 }
 
-func execute(args []string) error {
+func execute(args []string) {
 	cmd := exec.Command(args[0], args[1:]...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	return cmd.Run()
+	if err := cmd.Run(); err != nil {
+		fmt.Fprintln(os.Stderr, "error:", err)
+	} else {
+		fmt.Fprintln(os.Stderr, "success")
+	}
 }
 
 func watch(files, args []string) error {
 	// execute once in any case
-	if err := execute(args); err != nil {
-		return nil
-	}
-	fmt.Fprintln(os.Stderr, "success")
-
+	execute(args)
 	if len(files) == 0 {
 		return errors.New("no watch files specified with -w")
 	}
@@ -59,11 +59,7 @@ func watch(files, args []string) error {
 				if event.Op&fsnotify.Write == fsnotify.Write {
 					fmt.Fprintln(os.Stderr, "modified file:", event.Name)
 					// file has been written, execute
-					if err := execute(args); err != nil {
-						fmt.Fprintln(os.Stderr, "error:", err)
-					} else {
-						fmt.Fprintln(os.Stderr, "success")
-					}
+					execute(args)
 				}
 			case err, ok := <-watcher.Errors:
 				if !ok {
