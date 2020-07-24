@@ -1,5 +1,7 @@
 module github.com/frankbraun/kitchensink
 
+go 1.14
+
 require (
 	github.com/ajstarks/svgo v0.0.0-20181006003313-6ce6a3bcf6cd
 	github.com/alecthomas/chroma v0.6.2 // indirect
@@ -12,7 +14,7 @@ require (
 	github.com/frankbraun/codechain v0.0.0-20190128174530-0546a4cee715
 	github.com/frankbraun/huffman v0.0.0-20180512204827-00ccac022fac
 	github.com/frankbraun/tcell v0.0.0-20170501212358-62d7350d170f
-	github.com/fsnotify/fsnotify v1.4.7
+	github.com/fsnotify/fsnotify v1.4.9
 	github.com/gdamore/tcell v1.1.1
 	github.com/gobuffalo/events v1.2.0 // indirect
 	github.com/gobuffalo/meta v0.0.0-20190126124307-c8fb6f4eb5a9 // indirect
@@ -36,7 +38,6 @@ require (
 	golang.org/x/crypto v0.0.0-20190130090550-b01c7a725664
 	golang.org/x/image v0.0.0-20190118043309-183bebdce1b2 // indirect
 	golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3 // indirect
-	golang.org/x/sys v0.0.0-20190130150945-aca44879d564 // indirect
 	golang.org/x/tools v0.0.0-20190130214255-bb1329dc71a0 // indirect
 	gopkg.in/yaml.v2 v2.2.2
 )

@@ -5,13 +5,14 @@ github.com/PuerkitoBio/purell
 # github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
 github.com/PuerkitoBio/urlesc
 # github.com/ajstarks/svgo v0.0.0-20181006003313-6ce6a3bcf6cd
+## explicit
 github.com/ajstarks/svgo/float
 # github.com/alecthomas/chroma v0.6.2
+## explicit
 github.com/alecthomas/chroma
 github.com/alecthomas/chroma/formatters
 github.com/alecthomas/chroma/formatters/html
 github.com/alecthomas/chroma/lexers
-github.com/alecthomas/chroma/styles
 github.com/alecthomas/chroma/lexers/a
 github.com/alecthomas/chroma/lexers/b
 github.com/alecthomas/chroma/lexers/c
@@ -38,72 +39,100 @@ github.com/alecthomas/chroma/lexers/v
 github.com/alecthomas/chroma/lexers/w
 github.com/alecthomas/chroma/lexers/x
 github.com/alecthomas/chroma/lexers/y
+github.com/alecthomas/chroma/styles
+# github.com/alecthomas/repr v0.0.0-20181024024818-d37bc2a10ba1
+## explicit
+# github.com/bep/go-tocss v0.6.0
+## explicit
 # github.com/chaseadamsio/goorgeous v2.0.0+incompatible
+## explicit
 github.com/chaseadamsio/goorgeous
 # github.com/clbanning/mxj v1.8.4
+## explicit
 github.com/clbanning/mxj
+# github.com/coreos/etcd v3.3.11+incompatible
+## explicit
 # github.com/danwakefield/fnmatch v0.0.0-20160403171240-cbb64ac3d964
 github.com/danwakefield/fnmatch
 # github.com/dlclark/regexp2 v1.1.6
 github.com/dlclark/regexp2
 github.com/dlclark/regexp2/syntax
+# github.com/fortytw2/leaktest v1.3.0
+## explicit
 # github.com/frankbraun/codechain v0.0.0-20190128174530-0546a4cee715
+## explicit
+github.com/frankbraun/codechain/util/bzero
 github.com/frankbraun/codechain/util/file
 github.com/frankbraun/codechain/util/terminal
-github.com/frankbraun/codechain/util/bzero
 # github.com/frankbraun/huffman v0.0.0-20180512204827-00ccac022fac
+## explicit
 github.com/frankbraun/huffman/hufio
 # github.com/frankbraun/tcell v0.0.0-20170501212358-62d7350d170f
+## explicit
 github.com/frankbraun/tcell
-# github.com/fsnotify/fsnotify v1.4.7
+# github.com/fsnotify/fsnotify v1.4.9
+## explicit
 github.com/fsnotify/fsnotify
 # github.com/gdamore/encoding v1.0.0
 github.com/gdamore/encoding
 # github.com/gdamore/tcell v1.1.1
+## explicit
 github.com/gdamore/tcell
 github.com/gdamore/tcell/terminfo
+# github.com/gobuffalo/events v1.2.0
+## explicit
+# github.com/gobuffalo/meta v0.0.0-20190126124307-c8fb6f4eb5a9
+## explicit
 # github.com/gohugoio/hugo v0.49.2
-github.com/gohugoio/hugo/parser
-github.com/gohugoio/hugo/helpers
+## explicit
 github.com/gohugoio/hugo/bufferpool
+github.com/gohugoio/hugo/common/collections
 github.com/gohugoio/hugo/common/hugio
 github.com/gohugoio/hugo/common/maps
+github.com/gohugoio/hugo/common/math
 github.com/gohugoio/hugo/compare
 github.com/gohugoio/hugo/config
 github.com/gohugoio/hugo/docshelper
+github.com/gohugoio/hugo/helpers
 github.com/gohugoio/hugo/hugofs
 github.com/gohugoio/hugo/hugolib/filesystems
 github.com/gohugoio/hugo/hugolib/paths
-github.com/gohugoio/hugo/common/collections
-github.com/gohugoio/hugo/common/math
 github.com/gohugoio/hugo/langs
+github.com/gohugoio/hugo/parser
 # github.com/hashicorp/go-immutable-radix v1.0.0
 github.com/hashicorp/go-immutable-radix
+# github.com/hashicorp/go-uuid v1.0.1
+## explicit
 # github.com/hashicorp/golang-lru v0.5.0
 github.com/hashicorp/golang-lru/simplelru
 # github.com/hashicorp/hcl v1.0.0
 github.com/hashicorp/hcl
-github.com/hashicorp/hcl/hcl/printer
 github.com/hashicorp/hcl/hcl/ast
 github.com/hashicorp/hcl/hcl/parser
-github.com/hashicorp/hcl/hcl/token
-github.com/hashicorp/hcl/json/parser
+github.com/hashicorp/hcl/hcl/printer
 github.com/hashicorp/hcl/hcl/scanner
 github.com/hashicorp/hcl/hcl/strconv
+github.com/hashicorp/hcl/hcl/token
+github.com/hashicorp/hcl/json/parser
 github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
 # github.com/icza/bitio v0.0.0-20180221120200-b25b30b42508
+## explicit
 github.com/icza/bitio
 # github.com/icza/huffman v0.0.0-20170125130617-3d0826129c71
-github.com/icza/huffman/hufio
+## explicit
 github.com/icza/huffman
+github.com/icza/huffman/hufio
 # github.com/jdkato/prose v1.1.0
-github.com/jdkato/prose/transform
 github.com/jdkato/prose/internal/util
+github.com/jdkato/prose/transform
 # github.com/kyokomi/emoji v2.0.0+incompatible
+## explicit
 github.com/kyokomi/emoji
 # github.com/lucasb-eyer/go-colorful v0.0.0-20181028223441-12d3b2882a08
 github.com/lucasb-eyer/go-colorful
+# github.com/magefile/mage v1.8.0
+## explicit
 # github.com/magiconair/properties v1.8.0
 github.com/magiconair/properties
 # github.com/mattn/go-runewidth v0.0.4
@@ -113,25 +142,33 @@ github.com/miekg/mmark
 # github.com/mitchellh/mapstructure v1.1.2
 github.com/mitchellh/mapstructure
 # github.com/mutecomm/mute v0.0.0-20180427225835-8124193e6371
+## explicit
 github.com/mutecomm/mute/tui/textbuffer
 github.com/mutecomm/mute/util/browser
 # github.com/olekukonko/tablewriter v0.0.1
+## explicit
 github.com/olekukonko/tablewriter
 # github.com/pelletier/go-toml v1.2.0
 github.com/pelletier/go-toml
 # github.com/peterh/liner v1.1.0
+## explicit
 github.com/peterh/liner
 # github.com/rivo/tview v0.0.0-20190124120153-84fdb36408f3
+## explicit
 github.com/rivo/tview
 # github.com/russross/blackfriday v0.0.0-20180804101149-46c73eb196ba
 github.com/russross/blackfriday
 # github.com/russross/blackfriday/v2 v2.0.1
+## explicit
 github.com/russross/blackfriday/v2
 # github.com/sergi/go-diff v1.0.0
+## explicit
 github.com/sergi/go-diff/diffmatchpatch
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
+## explicit
 github.com/shurcooL/sanitized_anchor_name
 # github.com/spf13/afero v1.2.1
+## explicit
 github.com/spf13/afero
 github.com/spf13/afero/mem
 # github.com/spf13/cast v1.3.0
@@ -142,27 +179,40 @@ github.com/spf13/jwalterweatherman
 github.com/spf13/pflag
 # github.com/spf13/viper v1.3.1
 github.com/spf13/viper
+# github.com/tdewolff/minify v2.3.6+incompatible
+## explicit
+# github.com/tdewolff/test v1.0.0
+## explicit
+# github.com/ugorji/go/codec v0.0.0-20190128213124-ee1426cffec0
+## explicit
 # golang.org/x/crypto v0.0.0-20190130090550-b01c7a725664
-golang.org/x/crypto/ssh/terminal
+## explicit
 golang.org/x/crypto/argon2
-golang.org/x/crypto/nacl/secretbox
 golang.org/x/crypto/blake2b
 golang.org/x/crypto/internal/subtle
+golang.org/x/crypto/nacl/secretbox
 golang.org/x/crypto/poly1305
 golang.org/x/crypto/salsa20/salsa
+golang.org/x/crypto/ssh/terminal
+# golang.org/x/image v0.0.0-20190118043309-183bebdce1b2
+## explicit
 # golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3
+## explicit
 golang.org/x/net/idna
-# golang.org/x/sys v0.0.0-20190130150945-aca44879d564
+# golang.org/x/sys v0.0.0-20191005200804-aed5e4c7ecf9
+golang.org/x/sys/cpu
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-golang.org/x/sys/cpu
 # golang.org/x/text v0.3.0
 golang.org/x/text/encoding
-golang.org/x/text/transform
 golang.org/x/text/encoding/internal/identifier
+golang.org/x/text/secure/bidirule
+golang.org/x/text/transform
+golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
-golang.org/x/text/secure/bidirule
-golang.org/x/text/unicode/bidi
+# golang.org/x/tools v0.0.0-20190130214255-bb1329dc71a0
+## explicit
 # gopkg.in/yaml.v2 v2.2.2
+## explicit
 gopkg.in/yaml.v2
