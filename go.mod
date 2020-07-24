@@ -34,6 +34,7 @@ require (
 	github.com/spf13/afero v1.2.1 // indirect
 	github.com/tdewolff/minify v2.3.6+incompatible // indirect
 	github.com/tdewolff/test v1.0.0 // indirect
+	github.com/tidwall/pretty v1.0.1
 	github.com/ugorji/go/codec v0.0.0-20190128213124-ee1426cffec0 // indirect
 	golang.org/x/crypto v0.0.0-20190130090550-b01c7a725664
 	golang.org/x/image v0.0.0-20190118043309-183bebdce1b2 // indirect
