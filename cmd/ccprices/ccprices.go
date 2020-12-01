@@ -35,6 +35,7 @@ var (
 		"Ethereum",
 		"Grin",
 		"Litecoin",
+		"NEAR Protocol",
 		"Monero",
 		"Particl",
 		"Tezos",
