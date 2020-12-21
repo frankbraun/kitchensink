@@ -12,10 +12,12 @@ import (
 )
 
 const (
-	euroAPI  = "http://data.fixer.io/api/latest"
-	xauAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?limit=1"
-	xagAPI   = "https://www.quandl.com/api/v3/datasets/LBMA/SILVER.json?limit=1"
-	coinsAPI = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
+	euroAPI     = "http://data.fixer.io/api/latest"
+	xauAPI      = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?limit=1"
+	xagAPI      = "https://www.quandl.com/api/v3/datasets/LBMA/SILVER.json?limit=1"
+	coinsAPI    = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
+	esdAPI      = "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0x36f3fd68e7325a35eb768f1aedaae9ea0689d723&vs_currencies=EUR"
+	esdContract = "0x36f3fd68e7325a35eb768f1aedaae9ea0689d723"
 )
 
 var (
@@ -110,6 +112,21 @@ func getLBMAPrice(api string, dataIndex int) (float64, error) {
 	return price, nil
 }
 
+func getESTPrice(api string) (map[string]interface{}, error) {
+	b, err := httpGetWithWarning(api)
+	if err != nil {
+		return nil, err
+	}
+	if b == nil {
+		return nil, nil
+	}
+	jsn := make(map[string]interface{})
+	if err := json.Unmarshal(b, &jsn); err != nil {
+		return nil, err
+	}
+	return jsn[esdContract].(map[string]interface{}), nil
+}
+
 func getCoinPrices() ([]interface{}, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", coinsAPI, nil)
@@ -176,6 +193,11 @@ func main() {
 	if err != nil {
 		fatal(err)
 	}
+	// get ESD price
+	esd, err := getESTPrice(esdAPI)
+	if err != nil {
+		fatal(err)
+	}
 	// construct map of coin names we are interested in
 	var (
 		names  map[string]struct{}
@@ -234,4 +256,5 @@ func main() {
 			}
 		}
 	}
+	fmt.Printf("P %s ESD %11.6f EUR\n", t, esd["eur"].(float64))
 }
