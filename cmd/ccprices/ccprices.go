@@ -12,14 +12,18 @@ import (
 )
 
 const (
-	euroAPI     = "http://data.fixer.io/api/latest"
-	xauAPI      = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?limit=1"
-	xagAPI      = "https://www.quandl.com/api/v3/datasets/LBMA/SILVER.json?limit=1"
-	coinsAPI    = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
-	esdAPI      = "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0x36f3fd68e7325a35eb768f1aedaae9ea0689d723&vs_currencies=EUR"
-	esdContract = "0x36f3fd68e7325a35eb768f1aedaae9ea0689d723"
-	dsdAPI      = "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0xbd2f0cd039e0bfcf88901c98c0bfac5ab27566e3&vs_currencies=EUR"
-	dsdContract = "0xbd2f0cd039e0bfcf88901c98c0bfac5ab27566e3"
+	euroAPI      = "http://data.fixer.io/api/latest"
+	xauAPI       = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?limit=1"
+	xagAPI       = "https://www.quandl.com/api/v3/datasets/LBMA/SILVER.json?limit=1"
+	coinsAPI     = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
+	dsdAPI       = "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0xbd2f0cd039e0bfcf88901c98c0bfac5ab27566e3&vs_currencies=EUR"
+	dsdContract  = "0xbd2f0cd039e0bfcf88901c98c0bfac5ab27566e3"
+	esdAPI       = "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0x36f3fd68e7325a35eb768f1aedaae9ea0689d723&vs_currencies=EUR"
+	esdContract  = "0x36f3fd68e7325a35eb768f1aedaae9ea0689d723"
+	fraxAPI      = "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0x853d955acef822db058eb8505911ed77f175b99e&vs_currencies=EUR"
+	fraxContract = "0x853d955acef822db058eb8505911ed77f175b99e"
+	fxsAPI       = "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0&vs_currencies=EUR"
+	fxsContract  = "0x3432b6a60d23ca0dfca7761b7ab56459d9c964d0"
 )
 
 var (
@@ -38,12 +42,15 @@ var (
 		"Dash",
 		"Decred",
 		"Ethereum",
+		"Frax",
+		"Frax Shares",
 		"Grin",
 		"Litecoin",
 		"NEAR Protocol",
 		"Monero",
 		"Particl",
 		"Tezos",
+		"USD Coin",
 		"Zcash",
 	}
 )
@@ -115,6 +122,21 @@ func getLBMAPrice(api string, dataIndex int) (float64, error) {
 	return price, nil
 }
 
+func getDSDPrice(api string) (map[string]interface{}, error) {
+	b, err := httpGetWithWarning(api)
+	if err != nil {
+		return nil, err
+	}
+	if b == nil {
+		return nil, nil
+	}
+	jsn := make(map[string]interface{})
+	if err := json.Unmarshal(b, &jsn); err != nil {
+		return nil, err
+	}
+	return jsn[dsdContract].(map[string]interface{}), nil
+}
+
 func getESDPrice(api string) (map[string]interface{}, error) {
 	b, err := httpGetWithWarning(api)
 	if err != nil {
@@ -130,7 +152,7 @@ func getESDPrice(api string) (map[string]interface{}, error) {
 	return jsn[esdContract].(map[string]interface{}), nil
 }
 
-func getDSDPrice(api string) (map[string]interface{}, error) {
+func getFRAXPrice(api string) (map[string]interface{}, error) {
 	b, err := httpGetWithWarning(api)
 	if err != nil {
 		return nil, err
@@ -142,7 +164,22 @@ func getDSDPrice(api string) (map[string]interface{}, error) {
 	if err := json.Unmarshal(b, &jsn); err != nil {
 		return nil, err
 	}
-	return jsn[dsdContract].(map[string]interface{}), nil
+	return jsn[fraxContract].(map[string]interface{}), nil
+}
+
+func getFXSPrice(api string) (map[string]interface{}, error) {
+	b, err := httpGetWithWarning(api)
+	if err != nil {
+		return nil, err
+	}
+	if b == nil {
+		return nil, nil
+	}
+	jsn := make(map[string]interface{})
+	if err := json.Unmarshal(b, &jsn); err != nil {
+		return nil, err
+	}
+	return jsn[fxsContract].(map[string]interface{}), nil
 }
 
 func getCoinPrices() ([]interface{}, error) {
@@ -211,13 +248,23 @@ func main() {
 	if err != nil {
 		fatal(err)
 	}
+	// get DSD price
+	dsd, err := getDSDPrice(dsdAPI)
+	if err != nil {
+		fatal(err)
+	}
 	// get ESD price
 	esd, err := getESDPrice(esdAPI)
 	if err != nil {
 		fatal(err)
 	}
-	// get DSD price
-	dsd, err := getDSDPrice(dsdAPI)
+	// get FRAX price
+	frax, err := getFRAXPrice(fraxAPI)
+	if err != nil {
+		fatal(err)
+	}
+	// get FXS price
+	fxs, err := getFXSPrice(fxsAPI)
 	if err != nil {
 		fatal(err)
 	}
@@ -279,6 +326,8 @@ func main() {
 			}
 		}
 	}
-	fmt.Printf("P %s ESD %11.6f EUR\n", t, esd["eur"].(float64))
 	fmt.Printf("P %s DSD %11.6f EUR\n", t, dsd["eur"].(float64))
+	fmt.Printf("P %s ESD %11.6f EUR\n", t, esd["eur"].(float64))
+	fmt.Printf("P %s FRAX %11.6f EUR\n", t, frax["eur"].(float64))
+	fmt.Printf("P %s FXS %11.6f EUR\n", t, fxs["eur"].(float64))
 }
