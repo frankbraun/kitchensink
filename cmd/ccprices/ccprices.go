@@ -18,6 +18,8 @@ const (
 	coinsAPI    = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
 	esdAPI      = "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0x36f3fd68e7325a35eb768f1aedaae9ea0689d723&vs_currencies=EUR"
 	esdContract = "0x36f3fd68e7325a35eb768f1aedaae9ea0689d723"
+	dsdAPI      = "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0xbd2f0cd039e0bfcf88901c98c0bfac5ab27566e3&vs_currencies=EUR"
+	dsdContract = "0xbd2f0cd039e0bfcf88901c98c0bfac5ab27566e3"
 )
 
 var (
@@ -32,6 +34,7 @@ var (
 		"Bitcoin Cash",
 		"Bitcoin Gold",
 		"Bitcoin SV",
+		"Dai",
 		"Dash",
 		"Decred",
 		"Ethereum",
@@ -112,7 +115,7 @@ func getLBMAPrice(api string, dataIndex int) (float64, error) {
 	return price, nil
 }
 
-func getESTPrice(api string) (map[string]interface{}, error) {
+func getESDPrice(api string) (map[string]interface{}, error) {
 	b, err := httpGetWithWarning(api)
 	if err != nil {
 		return nil, err
@@ -125,6 +128,21 @@ func getESTPrice(api string) (map[string]interface{}, error) {
 		return nil, err
 	}
 	return jsn[esdContract].(map[string]interface{}), nil
+}
+
+func getDSDPrice(api string) (map[string]interface{}, error) {
+	b, err := httpGetWithWarning(api)
+	if err != nil {
+		return nil, err
+	}
+	if b == nil {
+		return nil, nil
+	}
+	jsn := make(map[string]interface{})
+	if err := json.Unmarshal(b, &jsn); err != nil {
+		return nil, err
+	}
+	return jsn[dsdContract].(map[string]interface{}), nil
 }
 
 func getCoinPrices() ([]interface{}, error) {
@@ -194,7 +212,12 @@ func main() {
 		fatal(err)
 	}
 	// get ESD price
-	esd, err := getESTPrice(esdAPI)
+	esd, err := getESDPrice(esdAPI)
+	if err != nil {
+		fatal(err)
+	}
+	// get DSD price
+	dsd, err := getDSDPrice(dsdAPI)
 	if err != nil {
 		fatal(err)
 	}
@@ -257,4 +280,5 @@ func main() {
 		}
 	}
 	fmt.Printf("P %s ESD %11.6f EUR\n", t, esd["eur"].(float64))
+	fmt.Printf("P %s DSD %11.6f EUR\n", t, dsd["eur"].(float64))
 }
