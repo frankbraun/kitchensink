@@ -41,9 +41,8 @@ var (
 		"Dai",
 		"Dash",
 		"Decred",
+		"DeFi Pulse Index",
 		"Ethereum",
-		"Frax",
-		"Frax Shares",
 		"Grin",
 		"Litecoin",
 		"NEAR Protocol",
@@ -191,7 +190,7 @@ func getCoinPrices() ([]interface{}, error) {
 
 	q := url.Values{}
 	q.Add("start", "1")
-	q.Add("limit", "2000")
+	q.Add("limit", "3000")
 	q.Add("convert", "EUR")
 
 	req.Header.Set("Accepts", "application/json")
