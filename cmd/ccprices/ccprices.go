@@ -34,6 +34,7 @@ var (
 	// Quandl API key can be set via environment variable QUANDL_API_KEY
 	quandl = os.Getenv("QUANDL_API_KEY")
 	coins  = []string{
+		"Binance Coin",
 		"Bitcoin",
 		"Bitcoin Cash",
 		"Bitcoin Gold",
@@ -48,6 +49,8 @@ var (
 		"NEAR Protocol",
 		"Monero",
 		"Particl",
+		"SHIBA INU",
+		"Stacks",
 		"Tezos",
 		"USD Coin",
 		"Zcash",
