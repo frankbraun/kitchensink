@@ -5,11 +5,44 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 
 	"github.com/tidwall/pretty"
 )
+
+func renameAccrossFilesystem(src, dst string) error {
+	// open source file
+	s, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer s.Close()
+	// get mode of source file
+	fi, err := s.Stat()
+	if err != nil {
+		return err
+	}
+	// make sure source file is a regular file
+	if !fi.Mode().IsRegular() {
+		return fmt.Errorf("source file '%s' is not a regular file", src)
+	}
+	mode := fi.Mode() & os.ModePerm // only keep standard UNIX permission bits
+	// create destination file
+	d, err := os.OpenFile(dst, os.O_CREATE|os.O_WRONLY, mode)
+	if err != nil {
+		return err
+	}
+	defer d.Close()
+	// copy content
+	if _, err := io.Copy(d, s); err != nil {
+		return err
+	}
+	// remove src file
+	defer os.Remove(src)
+	return nil
+}
 
 func formatJSON(filename string, bePretty bool) error {
 	in, err := ioutil.ReadFile(filename)
@@ -40,7 +73,11 @@ func formatJSON(filename string, bePretty bool) error {
 	if err := fp.Close(); err != nil {
 		return err
 	}
-	return os.Rename(fp.Name(), filename)
+	err = os.Rename(fp.Name(), filename)
+	if err != nil {
+		err = renameAccrossFilesystem(fp.Name(), filename)
+	}
+	return err
 }
 
 func fatal(err error) {
