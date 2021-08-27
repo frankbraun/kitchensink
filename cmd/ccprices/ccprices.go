@@ -34,21 +34,28 @@ var (
 	// Quandl API key can be set via environment variable QUANDL_API_KEY
 	quandl = os.Getenv("QUANDL_API_KEY")
 	coins  = []string{
+		"Avalanche",
+		"Balancer",
 		"Binance Coin",
 		"Bitcoin",
 		"Bitcoin Cash",
 		"Bitcoin Gold",
 		"Bitcoin SV",
+		"Curve DAO Token",
 		"Dai",
 		"Dash",
 		"Decred",
 		"DeFi Pulse Index",
 		"Ethereum",
+		"Fantom",
 		"Grin",
 		"Litecoin",
 		"NEAR Protocol",
 		"Monero",
+		"PancakeSwap",
 		"Particl",
+		"Polygon",
+		"Saber",
 		"SHIBA INU",
 		"Stacks",
 		"Tezos",
@@ -193,7 +200,7 @@ func getCoinPrices() ([]interface{}, error) {
 
 	q := url.Values{}
 	q.Add("start", "1")
-	q.Add("limit", "3000")
+	q.Add("limit", "4000")
 	q.Add("convert", "EUR")
 
 	req.Header.Set("Accepts", "application/json")
