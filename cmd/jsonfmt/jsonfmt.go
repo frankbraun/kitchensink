@@ -30,7 +30,7 @@ func renameAccrossFilesystem(src, dst string) error {
 	}
 	mode := fi.Mode() & os.ModePerm // only keep standard UNIX permission bits
 	// create destination file
-	d, err := os.OpenFile(dst, os.O_CREATE|os.O_WRONLY, mode)
+	d, err := os.OpenFile(dst, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, mode)
 	if err != nil {
 		return err
 	}
