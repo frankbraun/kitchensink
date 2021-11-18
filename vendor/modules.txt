@@ -57,6 +57,9 @@ github.com/danwakefield/fnmatch
 # github.com/dlclark/regexp2 v1.1.6
 github.com/dlclark/regexp2
 github.com/dlclark/regexp2/syntax
+# github.com/dustin/go-humanize v1.0.0
+## explicit
+github.com/dustin/go-humanize
 # github.com/fortytw2/leaktest v1.3.0
 ## explicit
 # github.com/frankbraun/codechain v0.0.0-20190128174530-0546a4cee715

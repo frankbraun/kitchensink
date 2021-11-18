@@ -10,6 +10,7 @@ require (
 	github.com/chaseadamsio/goorgeous v2.0.0+incompatible // indirect
 	github.com/clbanning/mxj v1.8.4
 	github.com/coreos/etcd v3.3.11+incompatible // indirect
+	github.com/dustin/go-humanize v1.0.0
 	github.com/fortytw2/leaktest v1.3.0 // indirect
 	github.com/frankbraun/codechain v0.0.0-20190128174530-0546a4cee715
 	github.com/frankbraun/huffman v0.0.0-20180512204827-00ccac022fac

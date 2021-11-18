@@ -8,7 +8,10 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"time"
+
+  "github.com/dustin/go-humanize"
 )
 
 const (
@@ -362,9 +365,20 @@ func main() {
 			}
 		}
 	}
-	fmt.Printf("P %s AURORA %11.6f EUR\n", t, aurora["eur"].(float64))
+  a := aurora["eur"].(float64)
+	fmt.Printf("P %s AURORA %11.6f EUR\n", t, a)
 	fmt.Printf("P %s DSD %11.6f EUR\n", t, dsd["eur"].(float64))
 	fmt.Printf("P %s ESD %11.6f EUR\n", t, esd["eur"].(float64))
 	fmt.Printf("P %s FRAX %11.6f EUR\n", t, frax["eur"].(float64))
 	fmt.Printf("P %s FXS %11.6f EUR\n", t, fxs["eur"].(float64))
+
+  stash := os.Getenv("AURORA_STASH")
+  if stash != "" {
+    ss, err := strconv.ParseFloat(stash, 64)
+    if err != nil {
+      panic(err)
+    }
+    amount, si := humanize.ComputeSI(a * ss)
+		fmt.Fprintf(os.Stderr, "Aurora stash: %.1f%s EUR\n", amount, si)
+  }
 }
