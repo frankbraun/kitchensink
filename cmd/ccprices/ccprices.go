@@ -16,6 +16,7 @@ const (
 	xauAPI       = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD.json?limit=1"
 	xagAPI       = "https://www.quandl.com/api/v3/datasets/LBMA/SILVER.json?limit=1"
 	coinsAPI     = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
+	auroraAPI    = "https://api.coingecko.com/api/v3/coins/aurora-near"
 	dsdAPI       = "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0xbd2f0cd039e0bfcf88901c98c0bfac5ab27566e3&vs_currencies=EUR"
 	dsdContract  = "0xbd2f0cd039e0bfcf88901c98c0bfac5ab27566e3"
 	esdAPI       = "https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0x36f3fd68e7325a35eb768f1aedaae9ea0689d723&vs_currencies=EUR"
@@ -49,15 +50,19 @@ var (
 		"Ethereum",
 		"Fantom",
 		"Grin",
+		"JOE",
 		"Litecoin",
 		"NEAR Protocol",
 		"Monero",
 		"PancakeSwap",
 		"Particl",
 		"Polygon",
+		"Raydium",
 		"Saber",
 		"SHIBA INU",
+		"Solana",
 		"Stacks",
+		"Terra",
 		"Tezos",
 		"USD Coin",
 		"Zcash",
@@ -129,6 +134,23 @@ func getLBMAPrice(api string, dataIndex int) (float64, error) {
 		price = data[0].([]interface{})[dataIndex-1].(float64)
 	}
 	return price, nil
+}
+
+func getAuroraPrice(api string) (map[string]interface{}, error) {
+	b, err := httpGetWithWarning(api)
+	if err != nil {
+		return nil, err
+	}
+	if b == nil {
+		return nil, nil
+	}
+	jsn := make(map[string]interface{})
+	if err := json.Unmarshal(b, &jsn); err != nil {
+		return nil, err
+	}
+  marketData := jsn["market_data"].(map[string]interface{})
+  currentPrice := marketData["current_price"].(map[string]interface{})
+  return currentPrice, nil
 }
 
 func getDSDPrice(api string) (map[string]interface{}, error) {
@@ -257,6 +279,11 @@ func main() {
 	if err != nil {
 		fatal(err)
 	}
+	// get AURORA price
+  aurora, err := getAuroraPrice(auroraAPI)
+	if err != nil {
+		fatal(err)
+	}
 	// get DSD price
 	dsd, err := getDSDPrice(dsdAPI)
 	if err != nil {
@@ -335,6 +362,7 @@ func main() {
 			}
 		}
 	}
+	fmt.Printf("P %s AURORA %11.6f EUR\n", t, aurora["eur"].(float64))
 	fmt.Printf("P %s DSD %11.6f EUR\n", t, dsd["eur"].(float64))
 	fmt.Printf("P %s ESD %11.6f EUR\n", t, esd["eur"].(float64))
 	fmt.Printf("P %s FRAX %11.6f EUR\n", t, frax["eur"].(float64))
