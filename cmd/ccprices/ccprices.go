@@ -40,7 +40,6 @@ var (
 	coins  = []string{
 		"Avalanche",
 		"Balancer",
-		"Binance Coin",
 		"Bitcoin",
 		"Bitcoin Cash",
 		"Bitcoin Gold",
@@ -356,6 +355,7 @@ func main() {
 		fmt.Printf("P %s CHF %11.6f EUR\n", t, 1/rates["CHF"].(float64))
 		fmt.Printf("P %s CZK %11.6f EUR\n", t, 1/rates["CZK"].(float64))
 		fmt.Printf("P %s THB %11.6f EUR\n", t, 1/rates["THB"].(float64))
+		fmt.Printf("P %s CRC %11.6f EUR\n", t, 1/rates["CRC"].(float64))
 	}
 	if xau != 0 {
 		fmt.Printf("P %s XAU %11.6f EUR\n", t, xau)
