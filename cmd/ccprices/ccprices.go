@@ -54,7 +54,7 @@ var (
 		"Grin",
 		"JOE",
 		"Litecoin",
-		"MARINADE STAKED SOL",
+		"Marinade Staked SOL",
 		"NEAR Protocol",
 		"Monero",
 		"PancakeSwap",
@@ -256,6 +256,15 @@ func getCoinPrices() ([]interface{}, error) {
 	if err := json.Unmarshal(b, &jsn); err != nil {
 		return nil, err
 	}
+
+  /*
+	s, err := json.MarshalIndent(jsn, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(string(s))
+  */
+
 	return jsn["data"].([]interface{}), nil
 }
 
@@ -356,6 +365,7 @@ func main() {
 		fmt.Printf("P %s CZK %11.6f EUR\n", t, 1/rates["CZK"].(float64))
 		fmt.Printf("P %s THB %11.6f EUR\n", t, 1/rates["THB"].(float64))
 		fmt.Printf("P %s CRC %11.6f EUR\n", t, 1/rates["CRC"].(float64))
+		fmt.Printf("P %s AED %11.6f EUR\n", t, 1/rates["AED"].(float64))
 	}
 	if xau != 0 {
 		fmt.Printf("P %s XAU %11.6f EUR\n", t, xau)
