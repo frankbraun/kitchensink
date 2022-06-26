@@ -51,14 +51,17 @@ var (
 		"DeFi Pulse Index",
 		"Ethereum",
 		"Fantom",
+		"FTX Token",
 		"Grin",
 		"JOE",
 		"Litecoin",
 		"Marinade Staked SOL",
 		"NEAR Protocol",
+		"Nexo",
 		"Monero",
 		"PancakeSwap",
 		"Particl",
+		"Phonon DAO",
 		"Polygon",
 		"Raydium",
 		"Saber",
@@ -232,7 +235,7 @@ func getCoinPrices() ([]interface{}, error) {
 
 	q := url.Values{}
 	q.Add("start", "1")
-	q.Add("limit", "4000")
+	q.Add("limit", "5000")
 	q.Add("convert", "EUR")
 
 	req.Header.Set("Accepts", "application/json")
@@ -257,13 +260,13 @@ func getCoinPrices() ([]interface{}, error) {
 		return nil, err
 	}
 
-  /*
-	s, err := json.MarshalIndent(jsn, "", "  ")
-	if err != nil {
-		return nil, err
-	}
-	fmt.Println(string(s))
-  */
+	/*
+		s, err := json.MarshalIndent(jsn, "", "  ")
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(string(s))
+	*/
 
 	return jsn["data"].([]interface{}), nil
 }
@@ -363,6 +366,7 @@ func main() {
 		fmt.Printf("P %s GBP %11.6f EUR\n", t, 1/rates["GBP"].(float64))
 		fmt.Printf("P %s CHF %11.6f EUR\n", t, 1/rates["CHF"].(float64))
 		fmt.Printf("P %s CZK %11.6f EUR\n", t, 1/rates["CZK"].(float64))
+		fmt.Printf("P %s HUF %11.6f EUR\n", t, 1/rates["HUF"].(float64))
 		fmt.Printf("P %s THB %11.6f EUR\n", t, 1/rates["THB"].(float64))
 		fmt.Printf("P %s CRC %11.6f EUR\n", t, 1/rates["CRC"].(float64))
 		fmt.Printf("P %s AED %11.6f EUR\n", t, 1/rates["AED"].(float64))
@@ -373,11 +377,15 @@ func main() {
 	if xag != 0 {
 		fmt.Printf("P %s XAG %11.6f EUR\n", t, xag)
 	}
+	var btc float64
 	if all != nil {
 		for _, name := range coins {
 			price, ok := prices[name]
 			if ok {
 				fmt.Printf("P %s %s %11.6f EUR\n", t, price.symbol, price.price)
+				if price.symbol == "BTC" {
+					btc = price.price
+				}
 			} else {
 				fmt.Fprintf(os.Stderr, "price for \"%s\" does not exist\n", name)
 			}
@@ -385,7 +393,10 @@ func main() {
 	}
 	a := aurora["eur"].(float64)
 	fmt.Printf("P %s AURORA %11.6f EUR\n", t, a)
-	fmt.Printf("P %s DSD %11.6f EUR\n", t, dsd["eur"].(float64))
+	dsdEUR, ok := dsd["eur"].(float64)
+	if ok {
+		fmt.Printf("P %s DSD %11.6f EUR\n", t, dsdEUR)
+	}
 	fmt.Printf("P %s ESD %11.6f EUR\n", t, esd["eur"].(float64))
 	fmt.Printf("P %s FRAX %11.6f EUR\n", t, frax["eur"].(float64))
 	fmt.Printf("P %s FXS %11.6f EUR\n", t, fxs["eur"].(float64))
@@ -396,7 +407,21 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		amount, si := humanize.ComputeSI(a * ss)
-		fmt.Fprintf(os.Stderr, "AURORA stash: %.1f%s EUR\n", amount, si)
+		total := a * ss
+		amount, si := humanize.ComputeSI(total)
+		fmt.Fprintf(os.Stderr, "AURORA stash: %6.1f%s EUR (%6.1f BTC)\n",
+			amount, si, total/btc)
+	}
+
+	total := os.Getenv("AURORA_TOTAL")
+	if total != "" {
+		ss, err := strconv.ParseFloat(total, 64)
+		if err != nil {
+			panic(err)
+		}
+		total := a * ss
+		amount, si := humanize.ComputeSI(total)
+		fmt.Fprintf(os.Stderr, "AURORA total: %6.1f%s EUR (%6.1f BTC)\n",
+			amount, si, total/btc)
 	}
 }
