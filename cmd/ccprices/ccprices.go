@@ -379,6 +379,7 @@ func main() {
 		fmt.Printf("P %s XAG %11.6f EUR\n", t, xag)
 	}
 	var btc float64
+	var eth float64
 	if all != nil {
 		for _, name := range coins {
 			price, ok := prices[name]
@@ -386,6 +387,9 @@ func main() {
 				fmt.Printf("P %s %s %11.6f EUR\n", t, price.symbol, price.price)
 				if price.symbol == "BTC" {
 					btc = price.price
+				}
+				if price.symbol == "ETH" {
+					eth = price.price
 				}
 			} else {
 				fmt.Fprintf(os.Stderr, "price for \"%s\" does not exist\n", name)
@@ -425,4 +429,6 @@ func main() {
 		fmt.Fprintf(os.Stderr, "AURORA total: %6.1f%s EUR (%6.1f BTC)\n",
 			amount, si, total/btc)
 	}
+
+	fmt.Fprintf(os.Stderr, "Ethereum/Bitcoin ratio: %.3f\n", eth/btc)
 }
