@@ -374,6 +374,7 @@ func main() {
 		fmt.Printf("P %s SAR %11.6f EUR\n", t, 1/rates["SAR"].(float64))
 		fmt.Printf("P %s QAR %11.6f EUR\n", t, 1/rates["QAR"].(float64))
 		fmt.Printf("P %s OMR %11.6f EUR\n", t, 1/rates["OMR"].(float64))
+		fmt.Printf("P %s ISK %11.6f EUR\n", t, 1/rates["ISK"].(float64))
 	}
 	if xau != 0 {
 		fmt.Printf("P %s XAU %11.6f EUR\n", t, xau)
