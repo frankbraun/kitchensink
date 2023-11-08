@@ -93,7 +93,7 @@ func usage() {
 func main() {
 	bePretty := flag.Bool("p", false, "Use pretty printer")
 	flag.Parse()
-	if flag.NArg() > 1 {
+	if flag.NArg() != 1 {
 		usage()
 	}
 	if err := formatJSON(flag.Arg(0), *bePretty); err != nil {
