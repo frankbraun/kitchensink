@@ -1,4 +1,5 @@
 # github.com/BurntSushi/toml v0.3.1
+## explicit
 github.com/BurntSushi/toml
 # github.com/PuerkitoBio/purell v1.1.0
 github.com/PuerkitoBio/purell
@@ -42,16 +43,12 @@ github.com/alecthomas/chroma/lexers/y
 github.com/alecthomas/chroma/styles
 # github.com/alecthomas/repr v0.0.0-20181024024818-d37bc2a10ba1
 ## explicit
-# github.com/bep/go-tocss v0.6.0
-## explicit
 # github.com/chaseadamsio/goorgeous v2.0.0+incompatible
 ## explicit
 github.com/chaseadamsio/goorgeous
 # github.com/clbanning/mxj v1.8.4
 ## explicit
 github.com/clbanning/mxj
-# github.com/coreos/etcd v3.3.11+incompatible
-## explicit
 # github.com/danwakefield/fnmatch v0.0.0-20160403171240-cbb64ac3d964
 github.com/danwakefield/fnmatch
 # github.com/dlclark/regexp2 v1.1.6
@@ -60,8 +57,6 @@ github.com/dlclark/regexp2/syntax
 # github.com/dustin/go-humanize v1.0.0
 ## explicit
 github.com/dustin/go-humanize
-# github.com/fortytw2/leaktest v1.3.0
-## explicit
 # github.com/frankbraun/codechain v0.0.0-20190128174530-0546a4cee715
 ## explicit
 github.com/frankbraun/codechain/util/bzero
@@ -82,10 +77,6 @@ github.com/gdamore/encoding
 ## explicit
 github.com/gdamore/tcell
 github.com/gdamore/tcell/terminfo
-# github.com/gobuffalo/events v1.2.0
-## explicit
-# github.com/gobuffalo/meta v0.0.0-20190126124307-c8fb6f4eb5a9
-## explicit
 # github.com/gohugoio/hugo v0.49.2
 ## explicit
 github.com/gohugoio/hugo/bufferpool
@@ -126,6 +117,8 @@ github.com/icza/bitio
 ## explicit
 github.com/icza/huffman
 github.com/icza/huffman/hufio
+# github.com/icza/mighty v0.0.0-20210726202234-1719e2dcca1b
+## explicit
 # github.com/jdkato/prose v1.1.0
 github.com/jdkato/prose/internal/util
 github.com/jdkato/prose/transform
@@ -134,8 +127,6 @@ github.com/jdkato/prose/transform
 github.com/kyokomi/emoji
 # github.com/lucasb-eyer/go-colorful v0.0.0-20181028223441-12d3b2882a08
 github.com/lucasb-eyer/go-colorful
-# github.com/magefile/mage v1.8.0
-## explicit
 # github.com/magiconair/properties v1.8.0
 github.com/magiconair/properties
 # github.com/mattn/go-runewidth v0.0.4
@@ -170,6 +161,8 @@ github.com/sergi/go-diff/diffmatchpatch
 # github.com/shurcooL/sanitized_anchor_name v1.0.0
 ## explicit
 github.com/shurcooL/sanitized_anchor_name
+# github.com/smartystreets/goconvey v1.7.2
+## explicit
 # github.com/spf13/afero v1.2.1
 ## explicit
 github.com/spf13/afero
@@ -181,17 +174,14 @@ github.com/spf13/jwalterweatherman
 # github.com/spf13/pflag v1.0.3
 github.com/spf13/pflag
 # github.com/spf13/viper v1.3.1
-github.com/spf13/viper
-# github.com/tdewolff/minify v2.3.6+incompatible
 ## explicit
-# github.com/tdewolff/test v1.0.0
+github.com/spf13/viper
+# github.com/stretchr/testify v1.3.0
 ## explicit
 # github.com/tidwall/pretty v1.0.1
 ## explicit
 github.com/tidwall/pretty
-# github.com/ugorji/go/codec v0.0.0-20190128213124-ee1426cffec0
-## explicit
-# golang.org/x/crypto v0.0.0-20190130090550-b01c7a725664
+# golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
 ## explicit
 golang.org/x/crypto/argon2
 golang.org/x/crypto/blake2b
@@ -200,10 +190,7 @@ golang.org/x/crypto/nacl/secretbox
 golang.org/x/crypto/poly1305
 golang.org/x/crypto/salsa20/salsa
 golang.org/x/crypto/ssh/terminal
-# golang.org/x/image v0.0.0-20190118043309-183bebdce1b2
-## explicit
-# golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3
-## explicit
+# golang.org/x/net v0.0.0-20190311183353-d8887717615a
 golang.org/x/net/idna
 # golang.org/x/sys v0.0.0-20191005200804-aed5e4c7ecf9
 golang.org/x/sys/cpu
@@ -217,8 +204,6 @@ golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
-# golang.org/x/tools v0.0.0-20190130214255-bb1329dc71a0
-## explicit
-# gopkg.in/yaml.v2 v2.2.2
+# gopkg.in/yaml.v2 v2.2.8
 ## explicit
 gopkg.in/yaml.v2
